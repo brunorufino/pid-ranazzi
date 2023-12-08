@@ -1,0 +1,16 @@
+.alinhamento {
+  padding-left: 300px;
+}
+h5 {
+  text-align: center;
+}
+span {
+  font-weight: bold;
+}
+table{
+  font-size: 15px;
+  
+}
+/* .table tbody tr:nth-child(odd) td {
+  background-color: rgba(0, 0, 0, 0.05);
+} */

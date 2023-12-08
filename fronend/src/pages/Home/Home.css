@@ -1,0 +1,24 @@
+.inicial {
+  width: 75%;
+  margin-top: 80px;
+  margin-left: 300px;
+  text-align: center;
+  display: flex;
+  justify-content: space-around;
+}
+
+.inicial h2,
+h3 {
+  margin-top: 50px;
+  font-family: "Dancing Script", cursive;
+
+  font-size: 50px;
+}
+
+.texto {
+  width: 80%;
+}
+
+.imagem img {
+  width: 100%;
+}

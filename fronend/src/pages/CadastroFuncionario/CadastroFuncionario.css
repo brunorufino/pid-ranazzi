@@ -1,0 +1,24 @@
+.alinhamento {
+  padding-left: 300px;
+}
+
+span {
+  font-weight: 600;
+  text-align: left;
+}
+
+.my-custom-icon {
+  font-size: 30px;
+}
+
+.aling-itens-botoes {
+  padding-left: 300px;
+}
+
+b {
+  color: rgb(206, 39, 39);
+}
+
+.cor_genero {
+  color: black;
+}

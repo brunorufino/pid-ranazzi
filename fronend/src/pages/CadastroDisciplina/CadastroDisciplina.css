@@ -1,0 +1,76 @@
+form {
+  text-align: left;
+}
+
+h3,
+h5 {
+  text-align: center;
+}
+
+i{
+   color: 'red';
+}
+.alinhamento {
+  padding-left: 300px;
+  padding-right: 20px;
+  padding-bottom: 20px;
+}
+
+label {
+  font-weight: bold;
+}
+
+.obs {
+  width: 100%;
+
+}
+
+#observacao {
+  width: 50%;
+  margin: 0 auto;
+  padding-left: 100px;
+  text-align: center;
+}
+
+#periodo {
+  padding: 7px;
+  width: 100%;
+  border-radius: 7px;
+}
+
+.centraliza {
+  width: 100%;
+  margin: 0 auto;
+  margin-bottom: 30px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+}
+
+
+table{
+  text-align: center;
+  width: 100%;
+}
+
+#observacao textarea{
+  padding: 10px;
+}
+
+
+.pesquisa{
+  cursor: pointer;
+}
+
+
+.buscar p{
+  text-align: center;
+}
+
+.span{
+  color:  red;
+}
+
+.vermelho{
+  border: 1px solid red;
+}
