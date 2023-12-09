@@ -11,8 +11,9 @@ function FormFuncionario() {
 
   
   const [funcionarioData, setFuncionarioData] = useState({});
-
-
+  const [funcionarioNome, setFuncionarioNome] =  useState('');
+ // const [filtrarCPF, setFuncionarioCPF] = useState('0');
+  
 
     const handleSubmit = async (event)=>{
       event.preventDefault();
@@ -26,12 +27,7 @@ function FormFuncionario() {
         alert('Erro ao Cadastrar novo funcionário!')
       }
     }
-    
-
-
-  
-
-  
+      
     const handleBlur = (event) => {
       //const { name, value } = event.target;
     };
@@ -59,8 +55,13 @@ const [funcionario, setFuncionario] = useState([])
     },[]);
 
     const handleDelete = async (codigo) =>{
-         await funcionarioService.deleteFuncionario(codigo);
+
+      
+        await funcionarioService.deleteFuncionario(codigo);
          await carregaFuncionario();
+       
+     
+         
     }
    
     const handleEdit= async (funcionario)=>{
@@ -175,6 +176,48 @@ const [funcionario, setFuncionario] = useState([])
     validacoes.validaCPF(cpf,id)
   }
 
+  async function getByNome(nomee) {
+
+    const nome = {
+      nome: `${nomee}`
+    }
+
+
+    try {
+
+      const dados = await funcionarioService.filtrar(nome)
+
+      if (dados.length > 0) {
+
+        const dadosFiltroNome = dados.map((funcionario) => (
+          {
+            codigo: `${funcionario.codigo}`,
+            nome: `${funcionario.nome}`,
+            cpf: `${funcionario.cpf}`,
+            rg: `${funcionario.rg}`,
+            dataNascimento: `${funcionario.dataNascimento}`,
+            genero: `${funcionario.genero}`,
+            telefone: `${funcionario.telefone}`
+          }
+        ))
+         
+        setFuncionario(dadosFiltroNome);
+    
+      }
+      else {
+        //alert(`Não existe funcionários com nome: ${nomee}`)
+      }
+      
+    }
+    catch (erro) {
+
+    }
+    
+  }
+
+
+
+
   return (
     <div>
     <form className="alinhamento" onSubmit={handleSubmit}>
@@ -206,6 +249,7 @@ const [funcionario, setFuncionario] = useState([])
                   onChange={handleInputChange}
                   required
                 />
+           
               </div>
             </div>
           </div>
@@ -514,6 +558,23 @@ const [funcionario, setFuncionario] = useState([])
      
     </form>
     <div class="container mt-4">
+        <div class="row">
+              <div class="input-group flex-nowrap">
+                <input
+                  name="nome"
+                  id="nome"
+                  type="text"
+                  class="form-control"
+                  placeholder="Pesquisar por nome"
+                  value={funcionarioData.nome}
+                  onChange={handleInputChange}
+                  onBlur={(e) => setFuncionarioNome(e.target.value)}
+                  required
+                />
+                  &nbsp; &nbsp;
+                <i class="bi bi-search my-custom-icon"  onClick={()=>getByNome(funcionarioNome)} ></i>
+            </div>
+            </div>
         <div class="table-responsive">
             <table class="table">
                 <thead>
@@ -529,7 +590,7 @@ const [funcionario, setFuncionario] = useState([])
                         <th> </th>
                     </tr>
                 </thead>
-      <tbody id='lista'>
+      <tbody>
       {
           funcionario.map((funcionario)=>(
               <tr key={funcionario.codigo}>

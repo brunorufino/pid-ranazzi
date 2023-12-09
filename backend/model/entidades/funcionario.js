@@ -63,9 +63,11 @@ class Funcionario {
     }
 
     async getByNome(nome){
-        const result = await banco.ExecutaComando(`SELECT codigo, nome, rg, cpf, DATE_FORMAT(dataNascimento, '%Y-%m-%d') as dataNascimento, genero, rua, numero, cidade, estado, cep, email, telefone, codDepartamento, DATE_FORMAT(dataAdmissao, '%Y-%m-%d') as dataAdmissao from funcionario where like = '%${nome}%'`)
-        const funcionario = result[0];
-        return funcionario;
+
+    
+            var sql = `SELECT codigo, nome, rg, cpf, DATE_FORMAT(dataNascimento, '%Y-%m-%d') as dataNascimento, genero, rua, numero, cidade, estado, cep, email, telefone, codDepartamento, DATE_FORMAT(dataAdmissao, '%Y-%m-%d') as dataAdmissao from funcionario where nome like '%${nome}%'`;
+        const result = await banco.ExecutaComando(sql);
+        return result;
     }
 
 
