@@ -32,6 +32,23 @@ class FucionarioContoller{
         }
     }
 
+    async getByName(req,res){
+
+        const filtro = req.body.nome;
+        console.log(filtro);
+        try {
+            const result = await funcionario.getByNome(filtro)
+            if(result){
+                  return res.status(200).json(result)
+            }
+            else{
+                res.status(404).json({error:'Nenhum funcionário foi localizado com esse nome'})
+            }
+        } catch (error) {
+            console.log('Erro ao consultar funcionário:'+error);
+            res.status(500).json({error:'Ocorreu um erro ao consultar o funcionário!'})
+        }
+    }
 
     async getByCPF(req,res){
 
