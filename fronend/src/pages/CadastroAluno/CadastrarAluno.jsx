@@ -1,7 +1,14 @@
 import "./CadastroAluno.css";
 import CadastroAlunoService from "../../pages/services/servicesAluno";
 import React, { useEffect, useState } from "react";
-import Validacoes from "./scriptTurma";
+import Validacoes from "./scriptAluno";
+
+// import DatePicker from "react-datepicker";
+// import {registerLocale, setDefaultLocale} from "react-datepicker";
+// import pt from "date-fns/locale/pt-BR";
+// import "react-datepicker/dist/react-datepicker.css";
+// registerLocale("pt",pt);
+// setDefaultLocale("pt");
 
 const CadastroAlunoServices = new CadastroAlunoService();
 const validacoes = new Validacoes();
@@ -25,27 +32,21 @@ const limpar = () => {
 };
 
 function CadastroAluno() {
-  const [CadastroAluno, setCadastroAluno] = useState([]);
+  const [alunoNome, setAlunoNome]= useState('');
+  const [filtrarNome, setFiltrarNome] = useState([])
+  //const [CadastroAluno, setCadastroAluno] = useState([]);
   const [CadastroAlunoData, setCadastroAlunoData] = useState({
-    nome: "",
-    cpf: "",
-    rg: "",
-    data_nasc: "",
-    sexo: "",
-    email: "",
-    rua: "",
-    numero: "",
-    bairro: "",
-    cep: "",
-    cidade: "",
-    nomerep: "",
-    telefone: "",
-    emailrep: "",
+    
   });
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
-    setCadastroAlunoData({ ...CadastroAlunoData, [name]: value });
+
+    // if (name === "data.nasc"){   /**Não permite data futura no data_nasc */
+    //   validarDataNascimento(value);
+    // }
+
+    setCadastroAlunoData((prevData)=>({...prevData, [name]: value})); /**({...CadastroAlunoData, [name]: value}) */
   };
 
   const handleSubmit = async (event) => {
@@ -55,10 +56,67 @@ function CadastroAluno() {
       await CadastroAlunoServices.createCadastroAluno(CadastroAlunoData);
       alert("Aluno cadastrado com sucesso!");
       await carregaCadastroAluno();
+      limpar()
     } catch (error) {
       alert("Erro ao cadastrar aluno!");
     }
   };
+
+  /**Pesquisa por nome */
+
+  // const handleBlur = (event) =>{
+
+  // };
+
+  const [CadastroAluno, setCadastroAluno] = useState([]) /**aluno, setAluno */
+   
+  const carregaCadastroAluno = async ()=>{
+      try {
+        const dados = await CadastroAlunoServices.getAllCadastroAluno();
+        setCadastroAluno(dados);
+
+      }catch (error){
+        console.error("Erro ao carregar aluno")
+      }
+    };
+
+  async function getByNome(nomee){
+
+    const nome = {
+      nome:`${nomee}`
+
+    }
+    try {
+
+      const dados = await CadastroAlunoServices.filtrar(nome)
+
+      if (dados.length > 0) {
+        const dadosFiltroNome = dados.map((aluno) => (
+          {
+            nome:`${aluno.nome}`,
+            cpf:`${aluno.cpf}`,
+            rg:`${aluno.rg}`,
+            data_nasc:`${aluno.data_nasc}`,
+            sexo:`${aluno.sexo}`,
+            email:`${aluno.email}`,
+            rua:`${aluno.rua}`,
+            numero:`${aluno.numero}`,
+            bairro:`${aluno.bairro}`,
+            cep:`${aluno.cep}`,
+            cidade:`${aluno.cidade}`,
+            nomerep:`${aluno.nomerep}`,
+            telefone:`${aluno.telefone}`,
+            emailrep:`${aluno.emailrep}`
+          }
+        ))
+
+        setCadastroAluno(dadosFiltroNome)
+      }
+    } catch (erro){
+
+    }
+
+  }
 
   async function deletar(cpf) {
     try {
@@ -70,21 +128,12 @@ function CadastroAluno() {
     }
   }
 
-  const carregaCadastroAluno = async () => {
-    try {
-      const dados = await CadastroAlunoServices.getAllCadastroAluno();
-      setCadastroAluno(dados);
-    } catch (erro) {
-      console.log(erro);
-    }
-  };
-
-
-
-
-  
-
-
+  // const carregaCadastroAluno = async () => {
+  //   try {
+  //     const dados = await CadastroAlunoServices.getAllCadastroAluno();
+  //     setCadastroAluno(dados);
+  //     } catch (erro) {}
+  // };
 
 
   async function atualizar(aluno) {
@@ -114,14 +163,11 @@ function CadastroAluno() {
 
   const getByCPF = async() =>{
 
-
     try {
-      const cpf = document.getElementById('cpf').value;
+      const cpf = document.getElementById('cpfBusca').value;
 
       /** Captura os dados por CPF e retorna em dados */
       const aluno = await CadastroAlunoServices.getByDocument(cpf);
-    
-      
      
     document.getElementById("nome").value = aluno.nome;
     document.getElementById("cpf").value = aluno.cpf;
@@ -140,7 +186,6 @@ function CadastroAluno() {
     const sexo = document.getElementById(sexo).value;
     sexo.click();
 
-     
     } catch (error) {
       
     }
@@ -151,6 +196,7 @@ function CadastroAluno() {
   function validarCPF(cpf,id){
     validacoes.validaCPF(cpf,id)
   }
+
 
   const atualizarCadrastoAluno = async () => {
     const nome = document.getElementById("nome").value;
@@ -191,20 +237,6 @@ function CadastroAluno() {
       emailrep: emailrep,
     };
 
-    console.log(nome);
-    console.log(cpf);
-    console.log(rg);
-    console.log(data_nasc);
-    console.log(sexo);
-    console.log(email);
-    console.log(rua);
-    console.log(numero);
-    console.log(bairro);
-    console.log(cep);
-    console.log(cidade);
-    console.log(nomerep);
-    console.log(telefone);
-    console.log(emailrep);
 
     try {
       await CadastroAlunoServices.atualizarCadastroAluno(dados);
@@ -214,8 +246,7 @@ function CadastroAluno() {
       await carregaCadastroAluno();
     } catch (error) {
       alert("Erro ao atualizar!");
-      console.log("Erro ao atualizar:", error);
-    }
+     }
   };
 
   return (
@@ -261,7 +292,7 @@ function CadastroAluno() {
                   autoComplete="cpf"
                 />
                  &nbsp; &nbsp;
-                 <i class="bi bi-search my-custom-icon"  onClick={() => getByCPF()} ></i>
+                 {/* <i class="bi bi-search my-custom-icon"  onClick={() => getByCPF()} ></i> */}
               </div>
             </div>
 
@@ -302,6 +333,7 @@ function CadastroAluno() {
               </div>
             </div>
           </div>
+
           <div className="row">
             <div className="col-3">
               <span>
@@ -509,14 +541,72 @@ function CadastroAluno() {
               <i class="bi bi-pencil"></i>&nbsp; ATUALIZAR
             </button>
           </div>
-          {/* <div className="col-3">
-            <button type="button" class="btn btn-danger">
-              <i class="bi bi-trash"></i>&nbsp; EXCLUIR
-            </button>
-          </div> */}
+         
           <div className="row">&nbsp;</div>
         </div>
+
+        <div className="card-body">
+          <div className="row">
+            <h6 className="hf">Filtro de Busca:</h6>
+            <div className="col-4">
+              <span className="sf">
+                Nome
+              </span>
+              <div className="input-group flex-nowrap">
+                <input
+                  type="text"
+                  id="nomeBusca"
+                  name="nomeBusca"
+                  className="form-control"
+                  placeholder="Nome Aluno"
+                  aria-describedby="addon-wrapping"
+                  value={CadastroAlunoData.nome}
+                  onChange={handleInputChange}
+                  onBlur={(e) => setAlunoNome(e.target.value)}               
+                  required
+                  
+                />
+                &nbsp;&nbsp;
+                <i
+                className="bi bi-search my-custom-icon"
+                onClick={() => getByNome(alunoNome)}
+                ></i>
+              </div>
+              &nbsp;
+            </div>
+          </div>
+          <div className="row">
+            <div className="col-2">
+            <span className="sf">
+                CPF
+              </span>
+              <div className="input-group flex-nowrap">
+                <input
+                  type="text"
+                  id="cpfBusca"
+                  name="cpfBusca"
+                  className="form-control"
+                  placeholder="Ex.:000.000.000-00"
+                  aria-describedby="addon-wrapping"
+                  onChange={handleInputChange}
+                  onKeyUp={(e) => validarCPF(e.target.value, "cpfBusca")}
+                  autoComplete="cpf"
+                />
+                &nbsp;&nbsp;
+                <i
+                  className="bi bi-search my-custom-icon"
+                  onClick={() => getByCPF()}
+                ></i>
+              </div>
+              &nbsp;
+            </div>
+            </div>
+          </div>
+
+
+
       </div>
+
       <div>
         <div class="table-responsive">
           <table class="table">
@@ -528,14 +618,7 @@ function CadastroAluno() {
                 <th scope="col">Data Nasc.</th>
                 <th scope="col">Sexo</th>
                 <th scope="col">E-mail</th>
-                <th scope="col">Endereço</th>
-                <th scope="col">N.º</th>
-                <th scope="col">Bairro</th>
-                <th scope="col">CEP</th>
-                <th scope="col">Cidade</th>
-                <th scope="col">Nome Rep.</th>
-                <th scope="col">Telefone</th>
-                <th scope="col">E-mail</th>
+            
               </tr>
             </thead>
             <tbody>
@@ -547,14 +630,7 @@ function CadastroAluno() {
                   <td>{CadastroAluno.data_nasc}</td>
                   <td>{CadastroAluno.sexo}</td>
                   <td>{CadastroAluno.email}</td>
-                  <td>{CadastroAluno.rua}</td>
-                  <td>{CadastroAluno.numero}</td>
-                  <td>{CadastroAluno.bairro}</td>
-                  <td>{CadastroAluno.cep}</td>
-                  <td>{CadastroAluno.cidade}</td>
-                  <td>{CadastroAluno.nomerep}</td>
-                  <td>{CadastroAluno.telefone}</td>
-                  <td>{CadastroAluno.emailrep}</td>
+                 
                   <td><i class="bi bi-trash"  style={{ color: 'red' }}  onClick={() => deletar(CadastroAluno.cpf)}></i></td>
                   <td><i class="bi bi-pen"  style={{ color: 'blue' }} onClick={() => atualizar(CadastroAluno)}></i></td>
                  
