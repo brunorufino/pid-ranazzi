@@ -238,12 +238,9 @@ function CadastroDisciplina() {
                   id="nome_disciplina"
                   name="nome"
                   onChange={handleInputChange}
-                  onBlur={(e) => setNomeDisciplina(e.target.value)}
                   onKeyUp={(e)=> validaNome(e.target.value,'nome_disciplina')}
                   required
                 />
-                &nbsp; &nbsp;
-                <i onClick={() => getByNome(nomeDisciplina)} class="bi bi-search my-custom-icon pesquisa"></i>
               </div>
             </div>
 
@@ -268,7 +265,7 @@ function CadastroDisciplina() {
           <div className="row mt-3" id="div_Dis">
 
             <div className="col-6">
-              <label htmlFor="cod">CÓD. DA DISCIPLINA <span className="span">*Exclusivo para buscas</span></label>
+              <label htmlFor="cod">CÓD. DA DISCIPLINA </label>
               <div className="input-group flex-nowrap">
                 <input
                   type="text"
@@ -277,9 +274,8 @@ function CadastroDisciplina() {
                   id="cod"
                   name="codigo"
                   onChange={(e) => setCodDisciplina(e.target.value)}
+                  disabled
                 />
-                &nbsp; &nbsp;
-                <i onClick={() => disciplina_Id(codDisciplina)} class="bi bi-search my-custom-icon pesquisa"></i>
               </div>
             </div>
           </div>
@@ -311,6 +307,44 @@ function CadastroDisciplina() {
           </div>
         </div>
       </div>
+
+      <h5 className="h5">Filtros de buscas</h5>
+
+      <div className="col-12 d-flex justify-content-around mt-4 mb-4">
+             <div className="col-5">
+             <label htmlFor="nome_disciplina">BUSCAR DISCIPLINA <span className="span">*</span></label>
+              <div className="input-group flex-nowrap">
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Ex: Português"
+                  id="nome_disciplina"
+                  name="nome"
+                  onBlur={(e) => setNomeDisciplina(e.target.value)}
+                  required
+                />
+                &nbsp; &nbsp;
+                <i onClick={() => getByNome(nomeDisciplina)} class="bi bi-search my-custom-icon pesquisa"></i>
+              </div>
+             </div>
+              <div className="col-5">
+              <label htmlFor="cod">CÓD. DA DISCIPLINA </label>
+              <div className="input-group flex-nowrap">
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Ex: 10"
+                  id="cod"
+                  name="codigo"
+                  onChange={(e) => setCodDisciplina(e.target.value)}
+                />
+                &nbsp; &nbsp;
+                <i onClick={() => disciplina_Id(codDisciplina)} class="bi bi-search my-custom-icon pesquisa"></i>
+              </div>
+            </div>
+        </div>
+
+
 
 
       <div className="table-responsive">
