@@ -19,6 +19,27 @@ class CadastroAlunoService{
         }
     }
 
+    /**Pesquisa por nome */
+    async filtrar(filtroData){
+        try {
+            const response = await fetch(`${API_BASE_URL}/aluno/filtrar`,{
+                method:"POST",
+                headers:{
+                'Content-Type':'application/json'
+                },
+                body:JSON.stringify(filtroData)
+            })
+            if(!response.ok){
+
+                throw new Error('Erro ao filtrar')
+            }
+            return await response.json();
+        }catch(error){
+            throw error;
+        }
+    }
+
+
     async deleteCadastroAluno(cpf){
         try {
             const response = await fetch(`${API_BASE_URL}/aluno/${cpf}`,{
