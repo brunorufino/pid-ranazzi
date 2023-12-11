@@ -89,9 +89,12 @@ class FuncionarioService{
                     body:JSON.stringify(funcionarioData)
                 })
                 if(!response.ok){
-                   
-                    throw new Error('Erro ao cadastrar')
+                   if(response.status === 409)
+                         throw new Error('CPF já cadastrado!!')
+                    else
+                         throw new Error('Erro ao cadastrar')      
                 }
+                return await response.json();
             } catch (error) {
                 throw error;
             }
