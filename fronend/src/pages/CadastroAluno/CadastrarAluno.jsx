@@ -564,10 +564,10 @@ function CadastroAluno() {
           <div className="row">&nbsp;</div>
         </div>
 
-        <div className="card-body">
-          <div className="row">
-            <h6 className="hf">Filtro de Busca:</h6>
-            <div className="col-3">
+        <h5 className="hf">Filtro de Buscas:</h5>
+        <div className=" col-12 d-flex justify-content-around mt-4 mb-4">
+
+            <div className="col-2">
               <span className="sf">Nome</span>
               <div className="input-group flex-nowrap">
                 <input
@@ -589,8 +589,7 @@ function CadastroAluno() {
               </div>
               &nbsp;
             </div>
-          </div>
-          <div className="row">
+
             <div className="col-2">
               <span className="sf">CPF</span>
               <div className="input-group flex-nowrap">
@@ -613,7 +612,7 @@ function CadastroAluno() {
               </div>
               &nbsp;
             </div>
-          </div>
+          
         </div>
       </div>
 
