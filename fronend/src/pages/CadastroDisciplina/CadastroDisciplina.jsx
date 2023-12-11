@@ -29,24 +29,29 @@ function CadastroDisciplina() {
 
   const handleSubmit = async () => {
 
-    validacoes.verifica()
+    let erro = document.querySelectorAll('.vermelho')
 
-    try {
-      await disciplinaService.createDisciplina(disciplinaDate)
+    if (erro.length < 1) {
+      try {
+        await disciplinaService.createDisciplina(disciplinaDate)
 
-      limpar()
+        limpar()
 
-      alert('Disciplina cadastrada com sucesso!')
+        alert('Disciplina cadastrada com sucesso!')
 
 
-    } catch (error) {
-      alert('Erro ao cadastrar!')
+      } catch (error) {
+        alert('Erro ao cadastrar!')
+      }
+    }
+    else {
+      alert('Cadastre todos os campos obrigatórios com dados válidos')
     }
   }
 
   async function atualizar(cod, nomee, cargaa, observacaoo) {
 
-   const btnAtualizar = document.getElementById('atualizar').disabled = false
+    const btnAtualizar = document.getElementById('atualizar').disabled = false
     const btnCadastrar = document.getElementById('cadastrar').disabled = true
 
     const codigo = document.getElementById('cod').value = cod
@@ -54,14 +59,14 @@ function CadastroDisciplina() {
     const carga = document.getElementById('carga').value = cargaa
     const observacao = document.getElementById('obs').value = observacaoo
 
-
   }
 
 
 
+
   const atualizarDisciplina = async () => {
-    
-  
+
+
     const codigo = document.getElementById('cod').value
     const nome = document.getElementById('nome_disciplina').value
     const carga = document.getElementById('carga').value
@@ -154,22 +159,25 @@ function CadastroDisciplina() {
 
 
 
-
   async function deletar(codigo) {
+    
+    let confirma = window.confirm('Confirma a exclusão ?')
 
+    if(confirma){
       try {
         await disciplinaService.deleteDisciplina(codigo)
         alert('Disciplina excluida com sucesso!')
-
-
+  
+  
       } catch (error) {
         alert('Erro ao excluir!')
       }
+    }
 
   }
 
+
   useEffect(() => {
-    
 
     const carregaDisciplinas = async () => {
 
@@ -177,7 +185,7 @@ function CadastroDisciplina() {
         const dados = await disciplinaService.getAllDisciplina()
 
         if (filtro.length < 1 && filtroNome.length < 1) {
-            
+
           setLista(dados)
         }
         else if (filtroNome.length > 0 && nomeDisciplina != '') {
@@ -207,20 +215,23 @@ function CadastroDisciplina() {
     const nome = document.getElementById('nome_disciplina').value = ''
     const carga = document.getElementById('carga').value = ''
     const observacao = document.getElementById('obs').value = ''
+
+    const btnCadastrar = document.getElementById('cadastrar').disabled = false
   }
 
-  function validaNome(nome,id){
-    validacoes.validaNome(nome,id)
+  function validaNome(nome, id) {
+    validacoes.validaNome(nome, id)
   }
 
-  function validacarga(carga,id){
-    validacoes.validaCarga(carga,id)
+  function validacarga(carga, id) {
+    validacoes.validaCarga(carga, id)
   }
 
-  function validaTexto(texto,id){
-    validacoes.validaTexto(texto,id)
+  function validaTexto(texto, id) {
+    validacoes.validaTexto(texto, id)
   }
 
+ 
 
   return (
     <form className="alinhamento">
@@ -238,12 +249,9 @@ function CadastroDisciplina() {
                   id="nome_disciplina"
                   name="nome"
                   onChange={handleInputChange}
-                  onBlur={(e) => setNomeDisciplina(e.target.value)}
-                  onKeyUp={(e)=> validaNome(e.target.value,'nome_disciplina')}
+                  onKeyUp={(e) => validaNome(e.target.value, 'nome_disciplina')}
                   required
                 />
-                &nbsp; &nbsp;
-                <i onClick={() => getByNome(nomeDisciplina)} class="bi bi-search my-custom-icon pesquisa"></i>
               </div>
             </div>
 
@@ -257,7 +265,7 @@ function CadastroDisciplina() {
                   id="carga"
                   name="carga"
                   onChange={handleInputChange}
-                  onKeyUp={(e)=> validacarga(e.target.value,'carga')}
+                  onKeyUp={(e) => validacarga(e.target.value, 'carga')}
                   required
                 />
               </div>
@@ -268,7 +276,7 @@ function CadastroDisciplina() {
           <div className="row mt-3" id="div_Dis">
 
             <div className="col-6">
-              <label htmlFor="cod">CÓD. DA DISCIPLINA <span className="span">*Exclusivo para buscas</span></label>
+              <label htmlFor="cod">CÓD. DA DISCIPLINA </label>
               <div className="input-group flex-nowrap">
                 <input
                   type="text"
@@ -277,9 +285,8 @@ function CadastroDisciplina() {
                   id="cod"
                   name="codigo"
                   onChange={(e) => setCodDisciplina(e.target.value)}
+                  disabled
                 />
-                &nbsp; &nbsp;
-                <i onClick={() => disciplina_Id(codDisciplina)} class="bi bi-search my-custom-icon pesquisa"></i>
               </div>
             </div>
           </div>
@@ -287,11 +294,11 @@ function CadastroDisciplina() {
 
           <div className="row  mt-5">
             <div id="observacao">
-              <label htmlFor="obs"  class="obs">
+              <label htmlFor="obs" class="obs">
                 OBSERVAÇÕES GERAIS <span className="span">*</span>
               </label>
               <div className="input-group flex-nowrap">
-                <textarea name="observacao" id="obs" cols="70" rows="4"  onKeyUp={(e)=> validaTexto(e.target.value,'obs')}  onChange={handleInputChange}>
+                <textarea name="observacao" id="obs" cols="70" rows="4" onKeyUp={(e) => validaTexto(e.target.value, 'obs')} onChange={handleInputChange}>
 
                 </textarea>
               </div>
@@ -309,8 +316,50 @@ function CadastroDisciplina() {
               <i class="bi bi-pencil"></i>&nbsp; ATUALIZAR
             </button>
           </div>
+          <div className="col-3">
+            <button type="submit" id="atualizar" onClick={() => limpar()} class="btn btn-dark">
+            <i class="bi bi-arrow-repeat"></i>&nbsp; LIMPAR
+            </button>
+          </div>
         </div>
       </div>
+
+      <h5 className="h5">Filtros de buscas</h5>
+
+      <div className="col-12 d-flex justify-content-around mt-4 mb-4">
+        <div className="col-5">
+          <label htmlFor="nome_disciplina">BUSCAR DISCIPLINA <span className="span">*</span></label>
+          <div className="input-group flex-nowrap">
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Ex: Português"
+              id="nome_disciplina"
+              name="noome"
+              onBlur={(e) => setNomeDisciplina(e.target.value)}
+            />
+            &nbsp; &nbsp;
+            <i onClick={() => getByNome(nomeDisciplina)} class="bi bi-search my-custom-icon pesquisa"></i>
+          </div>
+        </div>
+        <div className="col-5">
+          <label htmlFor="cod">CÓD. DA DISCIPLINA </label>
+          <div className="input-group flex-nowrap">
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Ex: 10"
+              id="cod"
+              name="codigo"
+              onChange={(e) => setCodDisciplina(e.target.value)}
+            />
+            &nbsp; &nbsp;
+            <i onClick={() => disciplina_Id(codDisciplina)} class="bi bi-search my-custom-icon pesquisa"></i>
+          </div>
+        </div>
+      </div>
+
+
 
 
       <div className="table-responsive">
@@ -331,8 +380,8 @@ function CadastroDisciplina() {
                   <td>{disciplina.nome}</td>
                   <td>{disciplina.carga}</td>
                   <td>{disciplina.observacao}</td>
-                  <td><i class="bi bi-trash" style={{ color: 'red' }} onClick={() => deletar(disciplina.codigo)}></i></td>
-                  <td><i class="bi bi-pen" style={{ color: 'blue' }} onClick={() => atualizar(disciplina.codigo, disciplina.nome, disciplina.carga, disciplina.observacao)}></i></td>
+                  <td><i class="bi bi-trash pesquisa" style={{ color: 'red' }} onClick={() => deletar(disciplina.codigo)}></i></td>
+                  <td><i class="bi bi-pen pesquisa" style={{ color: 'blue' }} onClick={() => atualizar(disciplina.codigo, disciplina.nome, disciplina.carga, disciplina.observacao)}></i></td>
                 </tr>
               ))
             }
@@ -340,7 +389,6 @@ function CadastroDisciplina() {
         </table>
 
       </div>
-
     </form>
   );
 }
