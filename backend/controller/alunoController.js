@@ -209,13 +209,13 @@ class AlunoController {
 
         try {
             if(result){
-                return res.status(200).json({menssagem:'Aluno apagado com sucesso'})
+                return res.status(200).json({menssagem:'Aluno excluído com sucesso'})
             }
         } catch (error) {
            
         res.status(500).json({
         erro:"Internal Server Error",
-        mensagem:'Ocorreu um erro ao deletar o Aluno!'})
+        mensagem:'Ocorreu um erro ao excluir o Aluno!'})
         }
     }else{
         res.status(400).json({
