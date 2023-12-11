@@ -35,6 +35,11 @@ class Turma {
         return result;
     }
 
+    async getByNome(nome){
+    var sql = `SELECT * from turma where descricao like '%${nome}%'`;
+    const result = await banco.ExecutaComando(sql);
+    return result;  
+    }
 
     async updateTurma(codigo,descricao,anoTurma,qtde){
 

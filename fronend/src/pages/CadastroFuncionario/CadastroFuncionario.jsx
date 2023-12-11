@@ -2,10 +2,28 @@ import "./CadastroFuncionario.css";
 import FuncionarioService from "../../pages/services/funcionarioService";
 import Validacoes from "./scriptFuncionario";
 import { useEffect, useState } from "react";
-
+import { format, isAfter } from "date-fns";
+import { IMaskInput } from "react-imask";
 
 const funcionarioService = new FuncionarioService();
 const validacoes = new Validacoes();
+
+const limpar = () => {
+
+  document.getElementById("codigo").value = "";
+  document.getElementById("nome").value = "";
+  document.getElementById('cpf').value = "";
+  document.getElementById('rg').value = "";
+  document.getElementById('rua').value = "";
+  document.getElementById('telefone').value = "";
+  document.getElementById('cep').value = "";
+  document.getElementById('numero').value = "";
+  document.getElementById('email').value = "";
+  document.getElementById('cidade').value = "";
+  document.getElementById('dataNascimento').value = "";
+  document.getElementById('dataAdmissao').value = "";
+  document.getElementById('codDepartamento').value = "";
+};
 
 function FormFuncionario() {
 
@@ -21,10 +39,13 @@ function FormFuncionario() {
       try {
          
           await funcionarioService.createFuncionario(funcionarioData)
-          alert('Funcionario cadastrado com sucesso!')
+          alert('Funcionario cadastrado com sucesso!');
+     
           await carregaFuncionario();
+          limpar();
       } catch (error) {
-        alert('Erro ao Cadastrar novo funcionário!')
+        alert(error);
+
       }
     }
       
@@ -34,9 +55,26 @@ function FormFuncionario() {
 
 
   const handleInputChange =(event) => {
+
     const {name, value} = event.target;
-    setFuncionarioData({...funcionarioData,[name]:value})
-  }                                                       
+    if (name === "dataNascimento" || name === "dataAdmissao") {
+         const currentDate = new Date();
+         const selectDate = new Date(value);
+
+         if (isAfter(selectDate, currentDate)) {
+          alert("A data não pode ser futura");
+          document.getElementById(name).value = "";
+          return;
+          
+        }
+        else{
+          setFuncionarioData({...funcionarioData,[name]:value})
+        }
+    }
+    else{
+      setFuncionarioData({...funcionarioData,[name]:value})
+    }
+}                                                       
 
 const [funcionario, setFuncionario] = useState([])
   
@@ -56,14 +94,27 @@ const [funcionario, setFuncionario] = useState([])
 
     const handleDelete = async (codigo) =>{
 
-      
-        await funcionarioService.deleteFuncionario(codigo);
-         await carregaFuncionario();
-       
+      const confirmacao = window.confirm("Confirma a exclusão?");
+
+      if(confirmacao){
+        try {
+          await funcionarioService.deleteFuncionario(codigo);
+          await carregaFuncionario();
+          alert("Funcionário deletado com sucesso!!")
+        } catch (error) {
+            alert("Erro ao excluir funcionário!!");
+        }
+      }
+    
      
          
     }
+    
+
+
+
    
+
     const handleEdit= async (funcionario)=>{
       const btnCadastrar = document.getElementById('CADASTRAR');
       const campoCodigo = document.getElementById('codigo');
@@ -277,20 +328,17 @@ const [funcionario, setFuncionario] = useState([])
                 CPF <b>*</b>
               </span>
               <div class="input-group flex-nowrap">
-                <input
-                  name="cpf"
-                  id="cpf"
+              <IMaskInput
+                  mask="000.000.000-00"
                   type="text"
-                  class="form-control"
-                  placeholder="999.999.999-00"
-                  value={funcionarioData.cpf}
+                  id="cpf"
+                  name="cpf"
+                  className="form-control"
+                  placeholder="Digite o CPF"
+                  aria-describedby="addon-wrapping"
                   onChange={handleInputChange}
-                  onBlur={handleBlur}
-                  onKeyUp={(e)=> validarCPF(e.target.value,'cpf')}
-                  maxLength="14"
-                  mask="999.999.999-99"
-                  maskChar="_"
-                  required
+                  onKeyUp={(e) => validarCPF(e.target.value, "cpf")}
+                  autoComplete="cpf"
                 />
                  &nbsp; &nbsp;
                 <i class="bi bi-search my-custom-icon"  onClick={() => getByCPF()} ></i>
@@ -427,14 +475,15 @@ const [funcionario, setFuncionario] = useState([])
             <div className="col-3">
               <span>CEP</span>
               <div class="input-group flex-nowrap">
-                <input
+              <IMaskInput
+                  mask="00000-000"
                   name="cep"
                   id="cep"
-                  type="number"
+                  type="int"
                   class="form-control"
-                  placeholder="99999-000"
+                  placeholder="Digite o CPF"
                   onChange={handleInputChange}
-                  value={funcionarioData.cep}
+                  autoComplete="cep"
                   required
                 />
               </div>
@@ -463,14 +512,15 @@ const [funcionario, setFuncionario] = useState([])
                 TELEFONE <b>*</b>
               </span>
               <div class="input-group flex-nowrap">
-                <input
+              <IMaskInput
+                  mask="(00) 00000-0000"
                   name="telefone"
                   id="telefone"
-                  type="number"
+                  type="int"
                   class="form-control"
-                  placeholder="(99) 99999-9999"
+                  placeholder="Digite o telefone"
                   onChange={handleInputChange}
-                  value={funcionarioData.telefone}
+                  autoComplete="telefone"
                   required
                 />
               </div>
