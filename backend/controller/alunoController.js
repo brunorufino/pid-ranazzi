@@ -34,6 +34,25 @@ class AlunoController {
       res.status(500).json({ error: "Erro ao buscar Aluno" });
     }
   }
+  /**pesquisa por nome* */
+  async getByNome (req,res){
+
+    const filtro = req.body.nome;
+    console.log(filtro);
+    try{
+      const result = await aluno.getByNome(filtro)
+      if(result){
+        return res.status(200).json(result)
+      }
+      else{
+        res.status(404).json({error:'Nunhum aluno foi localizado com esse nome'})
+      }
+    }catch (error){
+      console.log('Erro ao consultar aluno:'+error);
+      res.status(500).json({error:'Ocorreu um erro ao consultar o aluno!'})
+    }
+  }
+
 
   async create(req,res)  {
     var cpfExiste = false;
@@ -190,13 +209,13 @@ class AlunoController {
 
         try {
             if(result){
-                return res.status(200).json({menssagem:'Aluno apagado com sucesso'})
+                return res.status(200).json({menssagem:'Aluno excluído com sucesso'})
             }
         } catch (error) {
            
         res.status(500).json({
         erro:"Internal Server Error",
-        mensagem:'Ocorreu um erro ao deletar o Aluno!'})
+        mensagem:'Ocorreu um erro ao excluir o Aluno!'})
         }
     }else{
         res.status(400).json({

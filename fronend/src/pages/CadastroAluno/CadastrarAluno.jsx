@@ -1,7 +1,9 @@
 import "./CadastroAluno.css";
 import CadastroAlunoService from "../../pages/services/servicesAluno";
 import React, { useEffect, useState } from "react";
-import Validacoes from "./scriptTurma";
+import Validacoes from "./scriptAluno";
+import { IMaskInput } from "react-imask";
+import { format, isAfter } from "date-fns";
 
 const CadastroAlunoServices = new CadastroAlunoService();
 const validacoes = new Validacoes();
@@ -25,67 +27,120 @@ const limpar = () => {
 };
 
 function CadastroAluno() {
-  const [CadastroAluno, setCadastroAluno] = useState([]);
-  const [CadastroAlunoData, setCadastroAlunoData] = useState({
-    nome: "",
-    cpf: "",
-    rg: "",
-    data_nasc: "",
-    sexo: "",
-    email: "",
-    rua: "",
-    numero: "",
-    bairro: "",
-    cep: "",
-    cidade: "",
-    nomerep: "",
-    telefone: "",
-    emailrep: "",
-  });
+  const [alunoNome, setAlunoNome] = useState("");
+  const [filtrarNome, setFiltrarNome] = useState([]);
+  //const [CadastroAluno, setCadastroAluno] = useState([]);
+  const [CadastroAlunoData, setCadastroAlunoData] = useState({});
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
-    setCadastroAlunoData({ ...CadastroAlunoData, [name]: value });
+
+    if (name === "data_nasc") {
+      const currentDate = new Date();
+      const selectDate = new Date(value);
+
+      if (isAfter(selectDate, currentDate)) {
+        alert("A data de nascimento não pode ser futura");
+        return;
+      }
+    }
+
+    setCadastroAlunoData((prevData) => ({ ...prevData, [name]: value }));
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    try {
-      await CadastroAlunoServices.createCadastroAluno(CadastroAlunoData);
-      alert("Aluno cadastrado com sucesso!");
-      await carregaCadastroAluno();
-    } catch (error) {
-      alert("Erro ao cadastrar aluno!");
+    let erro = document.querySelectorAll(".vermelho");
+    if (erro.length < 1) {
+      try {
+        await CadastroAlunoServices.createCadastroAluno(CadastroAlunoData);
+
+        alert("Aluno cadastrado com sucesso!");
+        await carregaCadastroAluno();
+
+        limpar();
+      } catch (error) {
+        alert("Erro ao cadastrar aluno!");
+      }
+    } else {
+      alert("Cadastre todos os campos obrigatórios com dados válidos");
     }
   };
 
-  async function deletar(cpf) {
-    try {
-      await CadastroAlunoServices.deleteCadastroAluno(cpf);
-      alert("Aluno excluido com sucesso!");
-      await carregaCadastroAluno();
-    } catch (error) {
-      alert("Erro ao excluir aluno!");
-    }
-  }
+
+  /**Limpar campos */
+  const handleReset = () => {
+    const inputElements = document.querySelectorAll("input, IMaskInput");
+
+    inputElements.forEach((input) => {
+      if (input.classList.contains("IMaskInput")) {
+        const imaskInput = IMaskInput.getInputByNode(input);
+        if (imaskInput) {
+          imaskInput.unmaskedValue = "";
+        }
+      } else {
+        input.value = "";
+      }
+    });
+    carregaCadastroAluno();
+  };
+
+  const [CadastroAluno, setCadastroAluno] = useState([]); /**aluno, setAluno */
 
   const carregaCadastroAluno = async () => {
     try {
       const dados = await CadastroAlunoServices.getAllCadastroAluno();
       setCadastroAluno(dados);
-    } catch (erro) {
-      console.log(erro);
+    } catch (error) {
+      console.error("Erro ao carregar aluno");
     }
   };
 
+  async function getByNome(nomee) {
+    const nome = {
+      nome: `${nomee.toLowerCase()}`,
+    };
+    try {
+      const dados = await CadastroAlunoServices.filtrar(nome);
 
+      if (dados.length > 0) {
+        const dadosFiltroNome = dados.map((aluno) => ({
+          nome: `${aluno.nome}`,
+          cpf: `${aluno.cpf}`,
+          rg: `${aluno.rg}`,
+          data_nasc: `${aluno.data_nasc}`,
+          sexo: `${aluno.sexo}`,
+          email: `${aluno.email}`,
+          rua: `${aluno.rua}`,
+          numero: `${aluno.numero}`,
+          bairro: `${aluno.bairro}`,
+          cep: `${aluno.cep}`,
+          cidade: `${aluno.cidade}`,
+          nomerep: `${aluno.nomerep}`,
+          telefone: `${aluno.telefone}`,
+          emailrep: `${aluno.emailrep}`,
+        }));
 
+        setCadastroAluno(dadosFiltroNome);
+      } else {
+        alert("Nenhum aluno encontrado");
+      }
+    } catch (erro) {}
+  }
 
-  
-
-
-
+  async function deletar(cpf) {
+    const confirmacao = window.confirm("Confirma a exclusão?");
+    if (confirmacao) {
+      try {
+        await CadastroAlunoServices.deleteCadastroAluno(cpf);
+        alert("Aluno excluido com sucesso!");
+        await carregaCadastroAluno();
+      } catch (error) {
+        alert("Erro ao excluir aluno!");
+      }
+    }
+  }
 
   async function atualizar(aluno) {
     /** Devolver valor para os campos de input */
@@ -94,7 +149,7 @@ function CadastroAluno() {
     document.getElementById("cpf").value = aluno.cpf;
     document.getElementById("rg").value = aluno.rg;
     document.getElementById("data_nasc").value = aluno.data_nasc;
-    document.getElementById('sexo'+ aluno.sexo).checked = true; 
+    document.getElementById("sexo" + aluno.sexo).checked = true;
     document.getElementById("email").value = aluno.email;
     document.getElementById("rua").value = aluno.rua;
     document.getElementById("numero").value = aluno.numero;
@@ -102,54 +157,46 @@ function CadastroAluno() {
     document.getElementById("cep").value = aluno.cep;
     document.getElementById("cidade").value = aluno.cidade;
     document.getElementById("nomerep").value = aluno.nomerep;
-    document.getElementById("telefone").value= aluno.telefone;
-    document.getElementById("emailrep").value= aluno.emailrep;
+    document.getElementById("telefone").value = aluno.telefone;
+    document.getElementById("emailrep").value = aluno.emailrep;
   }
 
   useEffect(() => {
     carregaCadastroAluno();
   }, []);
 
-
-
-  const getByCPF = async() =>{
-
-
+  const getByCPF = async () => {
     try {
-      const cpf = document.getElementById('cpf').value;
+      const cpf = document.getElementById("cpfBusca").value;
 
       /** Captura os dados por CPF e retorna em dados */
       const aluno = await CadastroAlunoServices.getByDocument(cpf);
-    
-      
-     
-    document.getElementById("nome").value = aluno.nome;
-    document.getElementById("cpf").value = aluno.cpf;
-    document.getElementById("rg").value = aluno.rg;
-    document.getElementById("data_nasc").value = aluno.data_nasc;
-    document.getElementById('sexo'+ aluno.sexo).checked = true; 
-    document.getElementById("email").value = aluno.email;
-    document.getElementById("rua").value = aluno.rua;
-    document.getElementById("numero").value = aluno.numero;
-    document.getElementById("bairro").value = aluno.bairro;
-    document.getElementById("cep").value = aluno.cep;
-    document.getElementById("cidade").value = aluno.cidade;
-    document.getElementById("nomerep").value = aluno.nomerep;
-    document.getElementById("telefone").value= aluno.telefone;
-    document.getElementById("emailrep").value= aluno.emailrep;
-    const sexo = document.getElementById(sexo).value;
-    sexo.click();
 
-     
-    } catch (error) {
-      
-    }
-  
+      document.getElementById("nome").value = aluno.nome;
+      document.getElementById("cpf").value = aluno.cpf;
+      document.getElementById("rg").value = aluno.rg;
+      document.getElementById("data_nasc").value = aluno.data_nasc;
+      document.getElementById("sexo" + aluno.sexo).checked = true;
+      document.getElementById("email").value = aluno.email;
+      document.getElementById("rua").value = aluno.rua;
+      document.getElementById("numero").value = aluno.numero;
+      document.getElementById("bairro").value = aluno.bairro;
+      document.getElementById("cep").value = aluno.cep;
+      document.getElementById("cidade").value = aluno.cidade;
+      document.getElementById("nomerep").value = aluno.nomerep;
+      document.getElementById("telefone").value = aluno.telefone;
+      document.getElementById("emailrep").value = aluno.emailrep;
+      const sexo = document.getElementById(sexo).value;
+      sexo.click();
+    } catch (error) {}
   };
 
+  function validarCPF(cpf, id) {
+    validacoes.validaCPF(cpf, id);
+  }
 
-  function validarCPF(cpf,id){
-    validacoes.validaCPF(cpf,id)
+  function validaNome(nome, id) {
+    validacoes.validaNome(nome, id);
   }
 
   const atualizarCadrastoAluno = async () => {
@@ -191,21 +238,6 @@ function CadastroAluno() {
       emailrep: emailrep,
     };
 
-    console.log(nome);
-    console.log(cpf);
-    console.log(rg);
-    console.log(data_nasc);
-    console.log(sexo);
-    console.log(email);
-    console.log(rua);
-    console.log(numero);
-    console.log(bairro);
-    console.log(cep);
-    console.log(cidade);
-    console.log(nomerep);
-    console.log(telefone);
-    console.log(emailrep);
-
     try {
       await CadastroAlunoServices.atualizarCadastroAluno(dados);
 
@@ -214,7 +246,6 @@ function CadastroAluno() {
       await carregaCadastroAluno();
     } catch (error) {
       alert("Erro ao atualizar!");
-      console.log("Erro ao atualizar:", error);
     }
   };
 
@@ -237,6 +268,7 @@ function CadastroAluno() {
                   placeholder="Nome Aluno"
                   aria-describedby="addon-wrapping"
                   onChange={handleInputChange}
+                  onBlur={(e) => validaNome(e.target.value, "nome")}
                   autoComplete="nome"
                 />
                 &nbsp; &nbsp;
@@ -249,19 +281,20 @@ function CadastroAluno() {
                 CPF<b>*</b>
               </span>
               <div className="input-group flex-nowrap">
-                <input
+                <IMaskInput
+                  mask="000.000.000-00"
                   type="text"
                   id="cpf"
                   name="cpf"
                   className="form-control"
-                  placeholder="Ex.:000.000.000-00"
+                  placeholder="Digite o CPF"
                   aria-describedby="addon-wrapping"
                   onChange={handleInputChange}
-                  onKeyUp={(e)=> validarCPF(e.target.value,'cpf')}
+                  onKeyUp={(e) => validarCPF(e.target.value, "cpf")}
                   autoComplete="cpf"
                 />
-                 &nbsp; &nbsp;
-                 <i class="bi bi-search my-custom-icon"  onClick={() => getByCPF()} ></i>
+                &nbsp; &nbsp;
+                {/* <i class="bi bi-search my-custom-icon"  onClick={() => getByCPF()} ></i> */}
               </div>
             </div>
 
@@ -275,7 +308,7 @@ function CadastroAluno() {
                   id="rg"
                   name="rg"
                   className="form-control"
-                  placeholder="Ex.: 00000000-0"
+                  placeholder="Digite o RG"
                   aria-describedby="addon-wrapping"
                   onChange={handleInputChange}
                   autoComplete="rg"
@@ -359,8 +392,9 @@ function CadastroAluno() {
                   id="rua"
                   type="text"
                   class="form-control"
-                  placeholder="Rua.:"
+                  placeholder="Rua/Av.:"
                   onChange={handleInputChange}
+                  onBlur={(e) => validaNome(e.target.value, "rua")}
                   autoComplete="rua"
                   required
                 />
@@ -395,6 +429,7 @@ function CadastroAluno() {
                   class="form-control"
                   placeholder="Bairro"
                   onChange={handleInputChange}
+                  onBlur={(e) => validaNome(e.target.value, "bairro")}
                   autoComplete="bairro"
                   required
                 />
@@ -405,12 +440,13 @@ function CadastroAluno() {
                 CEP<b>*</b>
               </span>
               <div class="input-group flex-nowrap">
-                <input
+                <IMaskInput
+                  mask="00000-000"
                   name="cep"
                   id="cep"
                   type="int"
                   class="form-control"
-                  placeholder="00000-000"
+                  placeholder="Digite o CPF"
                   onChange={handleInputChange}
                   autoComplete="cep"
                   required
@@ -430,6 +466,7 @@ function CadastroAluno() {
                   class="form-control"
                   placeholder="Cidade"
                   onChange={handleInputChange}
+                  onBlur={(e) => validaNome(e.target.value, "cidade")}
                   autoComplete="cidade"
                   required
                 />
@@ -450,21 +487,23 @@ function CadastroAluno() {
                   className="form-control"
                   placeholder="Nome Representante"
                   onChange={handleInputChange}
+                  onBlur={(e) => validaNome(e.target.value, "nomerep")}
                   autoComplete="nomerep"
                 />
               </div>
             </div>
-            <div className="col-3">
+            <div className="col-2">
               <span>
                 TELEFONE<b>*</b>
               </span>
               <div class="input-group flex-nowrap">
-                <input
+                <IMaskInput
+                  mask="(00) 00000-0000"
                   name="telefone"
                   id="telefone"
                   type="int"
                   class="form-control"
-                  placeholder="(99) 99999-9999"
+                  placeholder="Digite o telefone"
                   onChange={handleInputChange}
                   autoComplete="telefone"
                   required
@@ -485,6 +524,7 @@ function CadastroAluno() {
                   className="form-control"
                   placeholder="exemplo@exemplo.com"
                   onChange={handleInputChange}
+                  //onBlur={(e) => validarEmail(e.target.value, "email")}
                   autoComplete="emailrep"
                 />
               </div>
@@ -495,7 +535,7 @@ function CadastroAluno() {
 
         <div className="row aling-itens-botoes alinhamento">
           <div className="col-2">
-            <button type="submit" class="btn btn-success">
+            <button type="submit" className="btn btn-success">
               <i class="bi bi-bag-plus"></i>&nbsp; CADASTRAR
             </button>
           </div>
@@ -504,19 +544,78 @@ function CadastroAluno() {
               type="button"
               id="atualizar"
               onClick={(e) => atualizarCadrastoAluno()}
-              class="btn btn-primary"
+              className="btn btn-primary"
             >
               <i class="bi bi-pencil"></i>&nbsp; ATUALIZAR
             </button>
           </div>
-          {/* <div className="col-3">
-            <button type="button" class="btn btn-danger">
-              <i class="bi bi-trash"></i>&nbsp; EXCLUIR
+
+          <div className="col-2">
+            <button
+              type="button"
+              value="reset"
+              className="btn btn-secondary"
+              onClick={handleReset}
+            >
+              <i class="bi bi-arrow-repeat"></i>&nbsp; LIMPAR
             </button>
-          </div> */}
+          </div>
+
           <div className="row">&nbsp;</div>
         </div>
+
+        <h5 className="hf">Filtro de Buscas:</h5>
+        <div className=" col-12 d-flex justify-content-around mt-4 mb-4">
+
+            <div className="col-2">
+              <span className="sf">Nome</span>
+              <div className="input-group flex-nowrap">
+                <input
+                  type="text"
+                  id="nomeBusca"
+                  name="nomeBusca"
+                  className="form-control"
+                  placeholder="Nome Aluno"
+                  aria-describedby="addon-wrapping"
+                  value={CadastroAlunoData.nome}
+                  onBlur={(e) => setAlunoNome(e.target.value)}
+                  required
+                />
+                &nbsp;&nbsp;
+                <i
+                  className="bi bi-search my-custom-icon"
+                  onClick={() => getByNome(alunoNome)}
+                ></i>
+              </div>
+              &nbsp;
+            </div>
+
+            <div className="col-2">
+              <span className="sf">CPF</span>
+              <div className="input-group flex-nowrap">
+                <input
+                  type="text"
+                  id="cpfBusca"
+                  name="cpfBusca"
+                  className="form-control"
+                  placeholder="Digite o CPF"
+                  aria-describedby="addon-wrapping"
+                  onChange={handleInputChange}
+                  onKeyUp={(e) => validarCPF(e.target.value, "cpfBusca")}
+                  autoComplete="cpf"
+                />
+                &nbsp;&nbsp;
+                <i
+                  className="bi bi-search my-custom-icon"
+                  onClick={() => getByCPF()}
+                ></i>
+              </div>
+              &nbsp;
+            </div>
+          
+        </div>
       </div>
+
       <div>
         <div class="table-responsive">
           <table class="table">
@@ -527,14 +626,6 @@ function CadastroAluno() {
                 <th scope="col">RG</th>
                 <th scope="col">Data Nasc.</th>
                 <th scope="col">Sexo</th>
-                <th scope="col">E-mail</th>
-                <th scope="col">Endereço</th>
-                <th scope="col">N.º</th>
-                <th scope="col">Bairro</th>
-                <th scope="col">CEP</th>
-                <th scope="col">Cidade</th>
-                <th scope="col">Nome Rep.</th>
-                <th scope="col">Telefone</th>
                 <th scope="col">E-mail</th>
               </tr>
             </thead>
@@ -547,18 +638,21 @@ function CadastroAluno() {
                   <td>{CadastroAluno.data_nasc}</td>
                   <td>{CadastroAluno.sexo}</td>
                   <td>{CadastroAluno.email}</td>
-                  <td>{CadastroAluno.rua}</td>
-                  <td>{CadastroAluno.numero}</td>
-                  <td>{CadastroAluno.bairro}</td>
-                  <td>{CadastroAluno.cep}</td>
-                  <td>{CadastroAluno.cidade}</td>
-                  <td>{CadastroAluno.nomerep}</td>
-                  <td>{CadastroAluno.telefone}</td>
-                  <td>{CadastroAluno.emailrep}</td>
-                  <td><i class="bi bi-trash"  style={{ color: 'red' }}  onClick={() => deletar(CadastroAluno.cpf)}></i></td>
-                  <td><i class="bi bi-pen"  style={{ color: 'blue' }} onClick={() => atualizar(CadastroAluno)}></i></td>
-                 
-                  
+
+                  <td>
+                    <i
+                      class="bi bi-trash"
+                      style={{ color: "red" }}
+                      onClick={() => deletar(CadastroAluno.cpf)}
+                    ></i>
+                  </td>
+                  <td>
+                    <i
+                      class="bi bi-pen"
+                      style={{ color: "blue" }}
+                      onClick={() => atualizar(CadastroAluno)}
+                    ></i>
+                  </td>
                 </tr>
               ))}
             </tbody>

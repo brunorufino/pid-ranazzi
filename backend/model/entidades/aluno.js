@@ -62,6 +62,28 @@ class Aluno{
         return false;
     }
     }
+          /**pesquisa por nome**/
+    async getByNome (nome){
+        var sql = `SELECT 
+        cpf, 
+        nome, 
+        rg, 
+        DATE_FORMAT(data_nasc, '%Y-%m-%d') AS data_nasc,
+        sexo, 
+        email, 
+        rua, 
+        numero, 
+        bairro, 
+        cep, 
+        cidade, 
+        nomerep, 
+        telefone, 
+        emailrep 
+    FROM aluno where nome like '%${nome}%'`;
+    const result = await banco.ExecutaComando(sql);
+    return result;
+    }
+
 
    
     async validarCPF(cpf) {

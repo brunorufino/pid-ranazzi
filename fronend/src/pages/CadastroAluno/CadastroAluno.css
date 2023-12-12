@@ -14,3 +14,12 @@ table{
 /* .table tbody tr:nth-child(odd) td {
   background-color: rgba(0, 0, 0, 0.05);
 } */
+
+.vermelho{
+  border: 1px solid red;
+}
+
+.hf{
+  text-align: center;
+  margin-top: 20 px;
+}
