@@ -8,24 +8,30 @@ import { IMaskInput } from "react-imask";
 const funcionarioService = new FuncionarioService();
 const validacoes = new Validacoes();
 
-const limpar = () => {
 
-  document.getElementById("codigo").value = "";
-  document.getElementById("nome").value = "";
-  document.getElementById('cpf').value = "";
-  document.getElementById('rg').value = "";
-  document.getElementById('rua').value = "";
-  document.getElementById('telefone').value = "";
-  document.getElementById('cep').value = "";
-  document.getElementById('numero').value = "";
-  document.getElementById('email').value = "";
-  document.getElementById('cidade').value = "";
-  document.getElementById('dataNascimento').value = "";
-  document.getElementById('dataAdmissao').value = "";
-  document.getElementById('codDepartamento').value = "";
-};
 
 function FormFuncionario() {
+
+ 
+
+  function limpar(){
+    const codigo =  document.getElementById("codigo");
+    const nome = document.getElementById("nome");
+    const cpf = document.getElementById('cpf');
+    const rg = document.getElementById('rg');
+    const rua = document.getElementById('rua');
+    const telefone = document.getElementById('telefone');
+    const cep = document.getElementById('cep');
+    const numero = document.getElementById('numero');
+    const email = document.getElementById('email');
+    const cidade = document.getElementById('cidade');
+    const dataNasc = document.getElementById('dataNascimento');
+    const dataAdd = document.getElementById('dataAdmissao');
+    const codDep = document.getElementById('codDepartamento');
+ 
+    nome.value ="";
+  }   
+    
 
   
   const [funcionarioData, setFuncionarioData] = useState({});
@@ -40,9 +46,9 @@ function FormFuncionario() {
          
           await funcionarioService.createFuncionario(funcionarioData)
           alert('Funcionario cadastrado com sucesso!');
-     
           await carregaFuncionario();
           limpar();
+       
       } catch (error) {
         alert(error);
 
@@ -146,13 +152,12 @@ const [funcionario, setFuncionario] = useState([])
 
   const getByCPF = async() =>{
 
-
     try {
-      const cpf = document.getElementById('cpf').value;
+      const cpf = document.getElementById('localizacpf').value;
 
       /** Captura os dados por CPF e retorna em dados */
       const dados = await funcionarioService.getByDocument(cpf);
-    
+      alert(dados);
       
        document.getElementById('codigo').value = dados.codigo;
        document.getElementById('telefone').value  = dados.telefone
@@ -270,7 +275,7 @@ const [funcionario, setFuncionario] = useState([])
 
 
   return (
-    <div>
+
     <form className="alinhamento" onSubmit={handleSubmit}>
       <div class="card">
         <h5 class="card-header">GERENCIAR FUNCIONÁRIO</h5>
@@ -279,7 +284,7 @@ const [funcionario, setFuncionario] = useState([])
             <div className="col-2">
               <span>CÓD. FUNCIONÁRIO </span>
               <div class="input-group flex-nowrap">
-                <input id="codigo" name="codigo" type="number" class="form-control" placeholder="" value={funcionarioData.codigo} onChange={handleInputChange}/>
+                <input id="codigo" name="codigo" type="number" class="form-control" placeholder="" value={funcionarioData.codigo} onChange={handleInputChange} disabled/>
                
               </div>
             </div>
@@ -340,8 +345,6 @@ const [funcionario, setFuncionario] = useState([])
                   onKeyUp={(e) => validarCPF(e.target.value, "cpf")}
                   autoComplete="cpf"
                 />
-                 &nbsp; &nbsp;
-                <i class="bi bi-search my-custom-icon"  onClick={() => getByCPF()} ></i>
               </div>
             </div>
             <div className="col-2">
@@ -604,11 +607,9 @@ const [funcionario, setFuncionario] = useState([])
         
         </div>
         <div className="row">&nbsp;</div></div>
-        
-     
-    </form>
-    <div class="container mt-4">
+        <div class="container mt-4">
         <div class="row">
+          <div class="col-5">
               <div class="input-group flex-nowrap">
                 <input
                   name="nome"
@@ -624,6 +625,26 @@ const [funcionario, setFuncionario] = useState([])
                   &nbsp; &nbsp;
                 <i class="bi bi-search my-custom-icon"  onClick={()=>getByNome(funcionarioNome)} ></i>
             </div>
+            </div>
+            </div>
+            <div class="row"> &nbsp; </div>
+            <div class="row">
+              <div class="col-2">
+                <div class="input-group flex-nowrap">
+                  <IMaskInput
+                      mask="000.000.000-00"
+                      type="text"
+                      id="localizacpf"
+                      name="localizacpf"
+                      className="form-control"
+                      placeholder="Digite o CPF"
+                      aria-describedby="addon-wrapping"
+                      onChange={handleInputChange}
+                 
+                    />
+                    &nbsp; &nbsp;
+                    <i class="bi bi-search my-custom-icon"  onClick={() => getByCPF()} ></i>
+                  </div>
             </div>
         <div class="table-responsive">
             <table class="table">
@@ -661,6 +682,8 @@ const [funcionario, setFuncionario] = useState([])
         </div>
     </div>
       </div>
+    </form>
+ 
   );
 }
 
