@@ -158,6 +158,7 @@ async function getByNome(nomee) {
                   id="codigo"
                   name="codigo"
                   value={turmaData.codigo}
+                  disabled
                 />
                 &nbsp; &nbsp;
                 <i class="bi bi-search my-custom-icon"></i>
@@ -240,21 +241,23 @@ async function getByNome(nomee) {
     </form>
           <div class="container mt-4">
           <div class="row">
-              <div class="input-group flex-nowrap">
-                <input
-                  name="nome"
-                  id="nome"
-                  type="text"
-                  class="form-control"
-                  placeholder="Pesquisar por nome"
-                  value={turma.nome}
-                  onChange={handleInputChange}
-                  onBlur={(e) => setTurmaNome(e.target.value)}
-                  required
-                />
-                  &nbsp; &nbsp;
-                <i class="bi bi-search my-custom-icon"  onClick={()=>getByNome(turmaNome)} ></i>
-            </div>
+            <div class="col-5">
+                <div class="input-group flex-nowrap">
+                  <input
+                    name="nome"
+                    id="nome"
+                    type="text"
+                    class="form-control"
+                    placeholder="Pesquisar por nome"
+                    value={turma.nome}
+                    onChange={handleInputChange}
+                    onBlur={(e) => setTurmaNome(e.target.value)}
+                    required
+                  />
+                    &nbsp; &nbsp;
+                  <i class="bi bi-search my-custom-icon"  onClick={()=>getByNome(turmaNome)} ></i>
+              </div>
+              </div>
             </div>
           <div class="table-responsive">
               <table class="table">
