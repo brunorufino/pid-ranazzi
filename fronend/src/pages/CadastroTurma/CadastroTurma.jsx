@@ -152,7 +152,7 @@ async function getByNome(nomee) {
 
 
   return (
-    <div>
+
     <form className="alinhamento" onSubmit={handleSubmit}>
       <div class="card">
         <h5 class="card-header">GERENCIAR TURMA</h5>
@@ -258,10 +258,10 @@ async function getByNome(nomee) {
               &nbsp;
         </div>
       </div>
-    </form>
-          <div class="container mt-4">
+
+      <div class="container mt-4">
           <div class="row">
-            <div class="col-5">
+            <div class="col-4">
                 <div class="input-group flex-nowrap">
                   <input
                     name="nome"
@@ -308,8 +308,10 @@ async function getByNome(nomee) {
         </table>
           </div>
       </div>
+    </form>
+      
 
-      </div>
+
 
   );
 }
