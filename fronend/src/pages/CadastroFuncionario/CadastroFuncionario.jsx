@@ -30,6 +30,7 @@ function FormFuncionario() {
  
   const [funcionarioData, setFuncionarioData] = useState({});
   const [funcionarioNome, setFuncionarioNome] =  useState('');
+  const [funcionarioCPF, setFuncionarioCPF] = useState('');
  // const [filtrarCPF, setFuncionarioCPF] = useState('0');
   
 
@@ -140,18 +141,17 @@ const [funcionario, setFuncionario] = useState([])
       
   }
 
-  const getByCPF = async() =>{
+  const getByCPF = async(cpf) =>{
 
     try {
-      const cpf = document.getElementById('localizacpf').value;
 
       /** Captura os dados por CPF e retorna em dados */
       const dados = await funcionarioService.getByDocument(cpf);
-      alert(dados);
-      
+
        document.getElementById('codigo').value = dados.codigo;
        document.getElementById('telefone').value  = dados.telefone
        document.getElementById('nome').value  = dados.nome
+       document.getElementById('cpf').value  = dados.cpf
        document.getElementById('rg').value  = dados.rg; 
        document.getElementById('rua').value  = dados.rua;
        document.getElementById('cep').value  = dados.cep;
@@ -164,7 +164,7 @@ const [funcionario, setFuncionario] = useState([])
        const sexo = document.getElementById('genero' + dados.genero).value;
        sexo.click();
 
-     
+      
     } catch (error) {
       
     }
@@ -656,10 +656,10 @@ const [funcionario, setFuncionario] = useState([])
                       placeholder="Digite o CPF"
                       aria-describedby="addon-wrapping"
                       onChange={handleInputChange}
-                 
+                      onBlur={(e) => setFuncionarioCPF(e.target.value)}
                     />
                     &nbsp; &nbsp;
-                    <i class="bi bi-search my-custom-icon"  onClick={() => getByCPF()} ></i>
+                    <i class="bi bi-search my-custom-icon"  onClick={() => getByCPF(funcionarioCPF)} ></i>
                   </div>
             </div>
         <div class="table-responsive">
