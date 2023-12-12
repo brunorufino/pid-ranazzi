@@ -102,6 +102,17 @@ const atualizarTurma = async () => {
 }
 
 
+
+const handleReset = () => {
+  const inputElements = document.querySelectorAll("input, IMaskInput");
+
+  inputElements.forEach((input) => {
+      input.value = "";
+  });
+  window.location.reload();
+  carregaTurma();
+};
+
 async function getByNome(nomee) {
 
   const nome = {
@@ -232,7 +243,16 @@ async function getByNome(nomee) {
               <i class="bi bi-pencil"></i>&nbsp; ATUALIZAR
             </button>
           </div>
-       
+          <div className="col-3">
+            <button
+              type="button"
+              value="reset"
+              className="btn btn-secondary"
+              onClick={handleReset}
+            >
+              <i class="bi bi-arrow-repeat"></i>&nbsp; LIMPAR
+            </button>
+          </div>
         </div>
         <div className="row"> 
               &nbsp;

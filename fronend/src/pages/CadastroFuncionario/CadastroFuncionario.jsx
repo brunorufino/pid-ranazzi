@@ -8,32 +8,26 @@ import { IMaskInput } from "react-imask";
 const funcionarioService = new FuncionarioService();
 const validacoes = new Validacoes();
 
+function limpar(){
+  const codigo =  document.getElementById("codigo").value = "";
+  const nome = document.getElementById("nome").value = "";
+  const cpf = document.getElementById('cpf').value = "";
+  const rg = document.getElementById('rg').value = "";
+  const rua = document.getElementById('rua').value = "";
+  const telefone = document.getElementById('telefone').value = "";
+  const cep = document.getElementById('cep').value = "";
+  const numero = document.getElementById('numero').value = "";
+  const email = document.getElementById('email').value = "";
+  const cidade = document.getElementById('cidade').value = "";
+  const dataNasc = document.getElementById('dataNascimento').value = "";
+  const dataAdd = document.getElementById('dataAdmissao').value = "";
+  const codDep = document.getElementById('codDepartamento').value = "";
 
+
+};   
 
 function FormFuncionario() {
-
  
-
-  function limpar(){
-    const codigo =  document.getElementById("codigo");
-    const nome = document.getElementById("nome");
-    const cpf = document.getElementById('cpf');
-    const rg = document.getElementById('rg');
-    const rua = document.getElementById('rua');
-    const telefone = document.getElementById('telefone');
-    const cep = document.getElementById('cep');
-    const numero = document.getElementById('numero');
-    const email = document.getElementById('email');
-    const cidade = document.getElementById('cidade');
-    const dataNasc = document.getElementById('dataNascimento');
-    const dataAdd = document.getElementById('dataAdmissao');
-    const codDep = document.getElementById('codDepartamento');
- 
-    nome.value ="";
-  }   
-    
-
-  
   const [funcionarioData, setFuncionarioData] = useState({});
   const [funcionarioNome, setFuncionarioNome] =  useState('');
  // const [filtrarCPF, setFuncionarioCPF] = useState('0');
@@ -48,7 +42,7 @@ function FormFuncionario() {
           alert('Funcionario cadastrado com sucesso!');
           await carregaFuncionario();
           limpar();
-       
+          window.location.reload();
       } catch (error) {
         alert(error);
 
@@ -116,10 +110,6 @@ const [funcionario, setFuncionario] = useState([])
          
     }
     
-
-
-
-   
 
     const handleEdit= async (funcionario)=>{
       const btnCadastrar = document.getElementById('CADASTRAR');
@@ -284,6 +274,7 @@ const [funcionario, setFuncionario] = useState([])
         input.value = "";
       }
     });
+    window.location.reload();
     carregaFuncionario();
   };
 
@@ -318,6 +309,7 @@ const [funcionario, setFuncionario] = useState([])
                   value={funcionarioData.nome}
                   onChange={handleInputChange}
                   required
+                  autoComplete="nome"
                 />
            
               </div>
@@ -338,6 +330,7 @@ const [funcionario, setFuncionario] = useState([])
                   placeholder=""
                   value={funcionarioData.rg}
                   onChange={handleInputChange}
+                  autoComplete="rg"
                   required
                 />
               </div>
