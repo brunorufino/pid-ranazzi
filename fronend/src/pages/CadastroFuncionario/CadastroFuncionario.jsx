@@ -271,7 +271,21 @@ const [funcionario, setFuncionario] = useState([])
     
   }
 
+  const handleReset = () => {
+    const inputElements = document.querySelectorAll("input, IMaskInput");
 
+    inputElements.forEach((input) => {
+      if (input.classList.contains("IMaskInput")) {
+        const imaskInput = IMaskInput.getInputByNode(input);
+        if (imaskInput) {
+          imaskInput.unmaskedValue = "";
+        }
+      } else {
+        input.value = "";
+      }
+    });
+    carregaFuncionario();
+  };
 
 
   return (
@@ -604,7 +618,16 @@ const [funcionario, setFuncionario] = useState([])
               <i class="bi bi-pencil"></i>&nbsp; ATUALIZAR
             </button>
           </div>
-        
+          <div className="col-3">
+            <button
+              type="button"
+              value="reset"
+              className="btn btn-secondary"
+              onClick={handleReset}
+            >
+              <i class="bi bi-arrow-repeat"></i>&nbsp; LIMPAR
+            </button>
+          </div>
         </div>
         <div className="row">&nbsp;</div></div>
         <div class="container mt-4">
