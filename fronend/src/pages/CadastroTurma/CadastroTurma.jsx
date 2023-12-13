@@ -254,8 +254,9 @@ async function getByNome(nomee) {
             </button>
           </div>
         </div>
-        <div className="row"> 
-              &nbsp;
+        <div class="row">&nbsp;</div>
+        <div className="row">
+            <h5 className="hf">Filtro de Buscas:</h5>
         </div>
       </div>
 
@@ -264,8 +265,8 @@ async function getByNome(nomee) {
             <div class="col-4">
                 <div class="input-group flex-nowrap">
                   <input
-                    name="nome"
-                    id="nome"
+                    name="nomePesquisa"
+                    id="nomePesquisa"
                     type="text"
                     class="form-control"
                     placeholder="Pesquisar por nome"

@@ -622,7 +622,10 @@ const [funcionario, setFuncionario] = useState([])
             </button>
           </div>
         </div>
-        <div className="row">&nbsp;</div></div>
+        <div class="row">&nbsp;</div>
+        <div className="row">
+            <h5 className="hf">Filtro de Buscas:</h5>
+        </div></div>
         <div class="container mt-4">
         <div class="row">
           <div class="col-5">
