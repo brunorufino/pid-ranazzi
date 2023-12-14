@@ -46,6 +46,38 @@ function CadastroAluno() {
     }
 
     setCadastroAlunoData((prevData) => ({ ...prevData, [name]: value }));
+
+  
+    if (name === "email") {
+      validacoes.validaEmail(value, name);
+    }
+    if (name === "rua") {
+      validacoes.validaRua(value, name);
+    }
+    if (name === "emailrep") {
+      validacoes.validaEmailRep(value, name);
+    }
+    if (name === "rg") {
+      validacoes.validaRG(value, name);
+    }
+  
+    if (name === "numero") {
+      validacoes.validaNumero(value, name);
+    }
+  
+    if (name === "cep") {
+      validacoes.validaCEP(value, name);
+    }
+
+    if (name === "cidade") {
+      validacoes.validaCidade(value, "cidade");
+    }
+
+    if (name === "bairro") {
+      validacoes.validaBairro(value, "bairro");
+    }
+
+    
   };
 
   const handleSubmit = async (event) => {
@@ -79,8 +111,12 @@ function CadastroAluno() {
         if (imaskInput) {
           imaskInput.unmaskedValue = "";
         }
-      } else {
+      } else if (input.type === "radio"){
+                input.checked = false;
+      }
+      else {
         input.value = "";
+        input.classList.remove("vermelho");
       }
     });
     carregaCadastroAluno();
@@ -143,7 +179,7 @@ function CadastroAluno() {
   }
 
   async function atualizar(aluno) {
-    /** Devolver valor para os campos de input */
+   
 
     document.getElementById("nome").value = aluno.nome;
     document.getElementById("cpf").value = aluno.cpf;
@@ -169,7 +205,7 @@ function CadastroAluno() {
     try {
       const cpf = document.getElementById("cpfBusca").value;
 
-      /** Captura os dados por CPF e retorna em dados */
+    
       const aluno = await CadastroAlunoServices.getByDocument(cpf);
 
       document.getElementById("nome").value = aluno.nome;
@@ -244,7 +280,9 @@ function CadastroAluno() {
       limpar();
       alert("Aluno atualizado com sucesso!");
       await carregaCadastroAluno();
-    } catch (error) {
+
+
+      } catch (error) {
       alert("Erro ao atualizar!");
     }
   };
@@ -577,9 +615,10 @@ function CadastroAluno() {
                   className="form-control"
                   placeholder="Nome Aluno"
                   aria-describedby="addon-wrapping"
-                  value={CadastroAlunoData.nome}
+                  onChange={handleInputChange}
                   onBlur={(e) => setAlunoNome(e.target.value)}
-                  required
+                  onKeyUp={(e)=>validaNome(e.target.value, 'nomeBusca')}
+                  
                 />
                 &nbsp;&nbsp;
                 <i
@@ -593,7 +632,8 @@ function CadastroAluno() {
             <div className="col-2">
               <span className="sf">CPF</span>
               <div className="input-group flex-nowrap">
-                <input
+                <IMaskInput
+                  mask="000.000.000-00"
                   type="text"
                   id="cpfBusca"
                   name="cpfBusca"
