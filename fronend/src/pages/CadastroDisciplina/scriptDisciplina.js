@@ -50,15 +50,6 @@ class Validacoes{
             }
             }
 
-        verifica(){
-            let erro = document.querySelectorAll('.vermelho')
-
-            erro.forEach((item)=>{
-                item.value = ''
-            })
-        }
-
-
 }
 
 module.exports = Validacoes

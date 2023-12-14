@@ -72,6 +72,26 @@ class TurmaService{
             throw error;
         }
  }
+ 
+    async filtrar(filtroData){
+        try {
+            const response = await fetch(`${API_BASE_URL}/turma/filtrar`,{
+                method:"POST",
+                headers:{
+                    'Content-Type':'application/json'
+                },
+                body:JSON.stringify(filtroData)
+            })
+            if(!response.ok){
+            
+                throw new Error('Erro ao filtrar')
+            }
+            return await response.json();
+        } catch (error) {
+            throw error;
+        }
+
+    }
 }
 
 module.exports = TurmaService

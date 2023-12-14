@@ -9,7 +9,7 @@ function CadastroTurma() {
 
   const [turmaData, setTurmaData] = useState({});
   const [turma, setTurma] = useState([])
-
+  const [turmaNome, setTurmaNome] =  useState('');
 
   const handleSubmit = async (event)=>{
     event.preventDefault();
@@ -60,8 +60,18 @@ useEffect(()=>{
     
 }
 const handleDelete = async (codigo) =>{
-  await turmaService.deleteTurma(codigo);
-  await carregaTurma();
+  const confirmacao = window.confirm("Confirma a exclusão?");
+
+  if(confirmacao){
+    try {
+       await turmaService.deleteTurma(codigo);
+       await carregaTurma();
+       alert("Turma excluída com sucesso!")
+    } catch (error) {
+        alert("Erro ao excluir turma!!")
+    }
+  }
+     
 }
 
 
@@ -92,8 +102,57 @@ const atualizarTurma = async () => {
 }
 
 
+
+const handleReset = () => {
+  const inputElements = document.querySelectorAll("input, IMaskInput");
+
+  inputElements.forEach((input) => {
+      input.value = "";
+  });
+  window.location.reload();
+  carregaTurma();
+};
+
+async function getByNome(nomee) {
+
+  const nome = {
+    nome: `${nomee}`
+  }
+
+
+  try {
+
+    const dados = await turmaService.filtrar(nome)
+
+    if (dados.length > 0) {
+
+      const dadosFiltroNome = dados.map((turma) => (
+        {
+          codigo: `${turma.codigo}`,
+          descricao: `${turma.descricao}`,
+          anoTurma: `${turma.anoTurma}`,
+          qtde: `${turma.qtde}`,
+          
+        }
+      ));
+       
+      setTurma(dadosFiltroNome);
+  
+    }
+    else {
+      
+    }
+    
+  }
+  catch (erro) {
+
+  }
+  
+}
+
+
   return (
-    <div>
+
     <form className="alinhamento" onSubmit={handleSubmit}>
       <div class="card">
         <h5 class="card-header">GERENCIAR TURMA</h5>
@@ -110,6 +169,7 @@ const atualizarTurma = async () => {
                   id="codigo"
                   name="codigo"
                   value={turmaData.codigo}
+                  disabled
                 />
                 &nbsp; &nbsp;
                 <i class="bi bi-search my-custom-icon"></i>
@@ -183,14 +243,43 @@ const atualizarTurma = async () => {
               <i class="bi bi-pencil"></i>&nbsp; ATUALIZAR
             </button>
           </div>
-       
+          <div className="col-3">
+            <button
+              type="button"
+              value="reset"
+              className="btn btn-secondary"
+              onClick={handleReset}
+            >
+              <i class="bi bi-arrow-repeat"></i>&nbsp; LIMPAR
+            </button>
+          </div>
         </div>
-        <div className="row"> 
-              &nbsp;
+        <div class="row">&nbsp;</div>
+        <div className="row">
+            <h5 className="hf">Filtro de Buscas:</h5>
         </div>
       </div>
-    </form>
-          <div class="container mt-4">
+
+      <div class="container mt-4">
+          <div class="row">
+            <div class="col-4">
+                <div class="input-group flex-nowrap">
+                  <input
+                    name="nomePesquisa"
+                    id="nomePesquisa"
+                    type="text"
+                    class="form-control"
+                    placeholder="Pesquisar por nome"
+                    value={turma.nome}
+                    onChange={handleInputChange}
+                    onBlur={(e) => setTurmaNome(e.target.value)}
+                    required
+                  />
+                    &nbsp; &nbsp;
+                  <i class="bi bi-search my-custom-icon"  onClick={()=>getByNome(turmaNome)} ></i>
+              </div>
+              </div>
+            </div>
           <div class="table-responsive">
               <table class="table">
                   <thead>
@@ -220,8 +309,10 @@ const atualizarTurma = async () => {
         </table>
           </div>
       </div>
+    </form>
+      
 
-      </div>
+
 
   );
 }

@@ -94,6 +94,24 @@ class TurmaContoller{
         }
      }
 
+     async getByName(req,res){
+
+        const filtro = req.body.nome;
+        console.log(filtro);
+        try {
+            const result = await turma.getByNome(filtro)
+            if(result){
+                  return res.status(200).json(result)
+            }
+            else{
+                res.status(404).json({error:'Nenhum turma foi localizado com esse nome'})
+            }
+        } catch (error) {
+            console.log('Erro ao consultar turma:'+error);
+            res.status(500).json({error:'Ocorreu um erro ao consultar a turma!'})
+        }
+    }
+
      async delete(req,res){
         const codigo = req.params.codigo;
 

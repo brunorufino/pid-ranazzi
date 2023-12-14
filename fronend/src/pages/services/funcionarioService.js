@@ -18,7 +18,25 @@ class FuncionarioService{
 
      }
 
+     async filtrar(filtroData){
+        try {
+            const response = await fetch(`${API_BASE_URL}/funcionario/filtrar`,{
+                method:"POST",
+                headers:{
+                    'Content-Type':'application/json'
+                },
+                body:JSON.stringify(filtroData)
+            })
+            if(!response.ok){
+               
+                throw new Error('Erro ao filtrar')
+            }
+            return await response.json();
+        } catch (error) {
+            throw error;
+        }
 
+ }
      async getByDocument(cpf){
 
         try {
@@ -71,9 +89,12 @@ class FuncionarioService{
                     body:JSON.stringify(funcionarioData)
                 })
                 if(!response.ok){
-                   
-                    throw new Error('Erro ao cadastrar')
+                   if(response.status === 409)
+                         throw new Error('CPF já cadastrado!!')
+                    else
+                         throw new Error('Erro ao cadastrar')      
                 }
+                return await response.json();
             } catch (error) {
                 throw error;
             }
