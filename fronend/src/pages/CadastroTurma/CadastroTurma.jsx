@@ -18,8 +18,9 @@ function CadastroTurma() {
         await turmaService.createTurma(turmaData)
         alert('Turma cadastrado com sucesso!')
         await carregaTurma();  
+        window.location.reload();
     } catch (error) {
-      alert('Erro ao Alterar!')
+      alert('Erro cadastrar!')
     }
   }
   
@@ -90,11 +91,11 @@ const atualizarTurma = async () => {
     qtde: qtde
   }
   
-  console.log(dados)
   try {
     await turmaService.updateTurma(dados);
     alert('Turma atualizado com sucesso!')
     await carregaTurma();
+    window.reload();
   } catch (error) {
     alert('Erro ao atualizar! ')
     console.log('Erro ao atualizar: ', error)
@@ -273,7 +274,6 @@ async function getByNome(nomee) {
                     value={turma.nome}
                     onChange={handleInputChange}
                     onBlur={(e) => setTurmaNome(e.target.value)}
-                    required
                   />
                     &nbsp; &nbsp;
                   <i class="bi bi-search my-custom-icon"  onClick={()=>getByNome(turmaNome)} ></i>
