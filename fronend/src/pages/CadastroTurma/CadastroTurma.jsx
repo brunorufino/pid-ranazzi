@@ -273,7 +273,6 @@ async function getByNome(nomee) {
                     value={turma.nome}
                     onChange={handleInputChange}
                     onBlur={(e) => setTurmaNome(e.target.value)}
-                    required
                   />
                     &nbsp; &nbsp;
                   <i class="bi bi-search my-custom-icon"  onClick={()=>getByNome(turmaNome)} ></i>
