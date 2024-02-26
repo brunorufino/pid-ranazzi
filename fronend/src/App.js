@@ -7,10 +7,15 @@ import CadastroTurma from "./pages/CadastroTurma/CadastroTurma.jsx";
 import CadastroDisciplina from "./pages/CadastroDisciplina/CadastroDisciplina.jsx";
 import CadastroAluno from "./pages/CadastroAluno/CadastrarAluno.jsx";
 
+
+
 import "./App.css";
 
 function App() {
   return (
+
+
+    
     <Router>
       <Headers />
       <Routes>
@@ -22,6 +27,7 @@ function App() {
       </Routes>
       <Sidebar />
     </Router>
+    
   );
 }
 
