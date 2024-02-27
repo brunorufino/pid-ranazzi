@@ -3,10 +3,11 @@ const mysql = require('mysql2/promise')
 class DataBase{
     constructor(){
         this.pool=mysql.createPool({
-            host:'127.0.0.1',
+            host:'roundhouse.proxy.rlwy.net',
             user:'root',
-            password:'',
-            database:'baseRanazzi'
+            password:'a6A2edeeB64gCGA-Fh5A1-db1a12bc64',
+            database:'railway',
+            port:39895
         })
     }
 
