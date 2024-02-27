@@ -1,6 +1,7 @@
 const DataBase = require('../database');
 const banco = new DataBase();
 
+
 class Aluno{
     cpf;
     nome;
