@@ -47,3 +47,11 @@ CREATE TABLE Aluno (
     telefone VARCHAR(20),
     emailrep VARCHAR(255)
 );
+
+CREATE TABLE cronograma (
+    disc_codigo INT,
+    tur_codigo INT,
+    cro_data DATE,
+    CONSTRAINT pk_disciplina FOREIGN KEY(disc_codigo) REFERENCES disciplinas(codigo),
+    CONSTRAINT pk_turma FOREIGN KEY(tur_codigo) REFERENCES turma(codigo),
+);

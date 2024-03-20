@@ -22,6 +22,9 @@ app.use('/disciplina', disciplinasRota)
 const alunoRoutes = require('./routes/alunoRoutes')
 app.use('/aluno',alunoRoutes);
 
+const cronogramaRoutes = require('./routes/cronogramaRoutes')
+app.use('/cronograma',cronogramaRoutes)
+
 app.listen(port, ()=> {
     console.log('Rodando na porta: '+ port);
 })
