@@ -30,6 +30,15 @@ const banco = new DataBase()
         const result = await banco.ExecutaComandoNonQuery('delete from cronograma WHERE disc_codigo = ? and tur_codigo = ?',[codigo_disc,codigo_turma])
         return result;
     }
+
+    async getAll(){
+      const result = await banco.ExecutaComando(`  SELECT * FROM cronograma AS cro
+                                                   INNER JOIN turma AS tur ON cro.tur_codigo = tur.codigo
+                                                   INNER JOIN disciplinas AS dis ON cro.disc_codigo = dis.codigo`)
+     
+                                                   return result;
+     }
+
 }
 
 module.exports = Cronograma

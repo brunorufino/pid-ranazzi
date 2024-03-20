@@ -4,7 +4,7 @@ const CronogramaController = require('../controller/cronogramaController');
 const router = express.Router();
 const cronogramaController = new CronogramaController()
 
-
+router.get('/', cronogramaController.getAll)
 router.post('/',cronogramaController.create)
 router.put('/', cronogramaController.update)
 router.delete('/', cronogramaController.delete)
