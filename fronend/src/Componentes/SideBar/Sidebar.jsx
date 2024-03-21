@@ -43,6 +43,12 @@ function Sidebar() {
               <i class="bi bi-file-earmark-richtext"></i> TURMA
             </a>
           </li>
+          <li>
+            <a href="/cronograma" class="nav-link text-white">
+              {" "}
+              <i class="bi bi-file-earmark-richtext"></i> CRONOGRAMA
+            </a>
+          </li>
         </ul>
         <hr></hr>
       </div>

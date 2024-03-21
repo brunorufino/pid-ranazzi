@@ -90,5 +90,17 @@ async delete(req,res){
     }
  }
 
+
+ async getAll(req,res){
+
+    try {
+        const result = await cronograma.getAll()
+        return res.status(200).json(result)
+    } catch (error) {
+        console.log('Erro ao consultar horários:'+error);
+        res.status(500).json({error:'Ocorreu um erro ao consultar os horários!'})
+    }
+}
+
 }
 module.exports = CronogramaController;

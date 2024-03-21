@@ -6,7 +6,7 @@ import Home from "./pages/Home/Home.jsx";
 import CadastroTurma from "./pages/CadastroTurma/CadastroTurma.jsx";
 import CadastroDisciplina from "./pages/CadastroDisciplina/CadastroDisciplina.jsx";
 import CadastroAluno from "./pages/CadastroAluno/CadastrarAluno.jsx";
-
+import Cronograma from "./pages/Cronograma/Cronograma.jsx";
 
 
 import "./App.css";
@@ -24,6 +24,7 @@ function App() {
         <Route path="/aluno" element={<CadastroAluno />} />
         <Route path="/turma" element={<CadastroTurma />} />
         <Route path="/disciplina" element={<CadastroDisciplina />} />
+        <Route path="/cronograma" element={<Cronograma />} />
       </Routes>
       <Sidebar />
     </Router>
