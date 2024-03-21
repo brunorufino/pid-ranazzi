@@ -1,16 +1,22 @@
 import "./CadastroTurma.css";
 import TurmaService from "../../pages/services/TurmaService";
+import DisciplinaService from '../services/DisciplinaServices'
 import { useEffect, useState } from "react";
 
 const turmaService = new TurmaService();
+const disciplinaService = new DisciplinaService();
 
 function CadastroTurma() {
-
 
   const [turmaData, setTurmaData] = useState({});
   const [turma, setTurma] = useState([])
   const [turmaNome, setTurmaNome] =  useState('');
-
+  const [lista, setLista] = useState([])
+  const [filtroNome, setFiltroNome] = useState([])
+  const [codDisciplina, setCodDisciplina] = useState('0')
+  const [nomeDisciplina, setNomeDisciplina] = useState('')
+  const [filtro, setFiltro] = useState([])
+ 
   const handleSubmit = async (event)=>{
     event.preventDefault();
  
@@ -44,6 +50,39 @@ useEffect(()=>{
     const {name, value} = event.target;
     setTurmaData({...turmaData,[name]:value})
   }                                                       
+
+
+  useEffect(() => {
+
+    const carregaDisciplinas = async () => {
+
+      try {
+        const dados = await disciplinaService.getAllDisciplina()
+
+        if (filtro.length < 1 && filtroNome.length < 1) {
+
+          setLista(dados)
+        }
+        else if (filtroNome.length > 0 && nomeDisciplina != '') {
+          setLista(filtroNome)
+        }
+        else if (filtro.length > 0 && codDisciplina != '') {
+          setLista(filtro)
+        }
+        else {
+          setLista(dados)
+        }
+
+      }
+      catch (erro) {
+        alert('Erro ao carregar disciplinas')
+      }
+
+    }
+
+    carregaDisciplinas()
+  })
+
 
   const handleEdit= async (turma)=>{
     const btnCadastrar = document.getElementById('CADSATRAR');
@@ -150,7 +189,6 @@ async function getByNome(nomee) {
   
 }
 
-
   return (
 
     <form className="alinhamento" onSubmit={handleSubmit}>
@@ -165,10 +203,10 @@ async function getByNome(nomee) {
               <span>DISCIPLINA</span>
               <select class="form-control" id="anoTurma" name="anoTurma" onChange={handleInputChange} value={turmaData.anoTurma}>
               {
-                    turma.map((turma)=>(
-            
-                        <option>{turma.descricao}</option>
-                ))
+                          lista.map((disciplina) => (
+                            
+                            <option value= {disciplina.codigo}> {disciplina.nome} </option>
+                          ))
                 }
              </select>
             </div>
@@ -178,7 +216,7 @@ async function getByNome(nomee) {
               {
                     turma.map((turma)=>(
             
-                        <option>{turma.descricao}</option>
+                        <option value={turma.codigo}>{turma.descricao}</option>
                 ))
                 }
              </select>
