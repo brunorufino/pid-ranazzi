@@ -1,31 +1,42 @@
 import "./CadastroTurma.css";
 import TurmaService from "../../pages/services/TurmaService";
 import DisciplinaService from '../services/DisciplinaServices'
+import CronogramaService from  "../services/CronogramaService";
 import { useEffect, useState } from "react";
 
 const turmaService = new TurmaService();
 const disciplinaService = new DisciplinaService();
+const cronogramaService = new CronogramaService();
 
 function CadastroTurma() {
-
-  const [turmaData, setTurmaData] = useState({});
+  const [cronograma,setCronograma] = useState([]);
+  const [cronogramaData, setCronogramaData] = useState([]);
   const [turma, setTurma] = useState([])
-  const [turmaNome, setTurmaNome] =  useState('');
   const [lista, setLista] = useState([])
   const [filtroNome, setFiltroNome] = useState([])
   const [codDisciplina, setCodDisciplina] = useState('0')
   const [nomeDisciplina, setNomeDisciplina] = useState('')
   const [filtro, setFiltro] = useState([])
- 
+ const [Data, setData] = useState('')
+ const [Codigo_disciplina, setCodigoDisciplina] = useState('')
+ const [Codigo_turma, setCodigoTurma] = useState('')
+
   const handleSubmit = async (event)=>{
     event.preventDefault();
- 
+    
+    const dados = {
+      disc_codigo: Codigo_disciplina,
+      tur_codigo: Codigo_turma,
+      data: Data
+    }
+
     try {
-        await turmaService.createTurma(turmaData)
+    
+        await cronogramaService.createCronograma(dados)
         alert('Horário cadastrado com sucesso!')
-        await carregaTurma();  
+        await carregaCronograma();  
     } catch (error) {
-      alert('Erro ao Alterar!')
+      alert('Erro ao Cadastrar!')
     }
   }
   
@@ -45,12 +56,31 @@ useEffect(()=>{
 },[]);
 
 
+
+const carregaCronograma = async ()=>{
+  try {         
+      const dados = await cronogramaService.getAll();
+      setCronograma(dados);
+
+  } catch (error) {
+      console.error("Erro ao carregar Horario")
+  }
+};
+
   
   const handleInputChange =(event) => {
     const {name, value} = event.target;
-    setTurmaData({...turmaData,[name]:value})
+    console.log({name, value})
+    setCronogramaData({...cronogramaData,[name]:value})
+   
+ console.log(event.target);
   }                                                       
 
+
+  useEffect(() =>{
+
+    carregaCronograma();
+  },[])
 
   useEffect(() => {
 
@@ -81,113 +111,11 @@ useEffect(()=>{
     }
 
     carregaDisciplinas()
-  })
-
-
-  const handleEdit= async (turma)=>{
-    const btnCadastrar = document.getElementById('CADSATRAR');
-    const campoCodigo = document.getElementById('codigo');
-
-    btnCadastrar.disabled = true;
-    campoCodigo.disabled = true;
-
-    document.getElementById('codigo').value = turma.codigo;
-    document.getElementById('anoTurma').value = turma.anoTurma;
-    document.getElementById('descricao').value = turma.descricao;
-    document.getElementById('qtde').value = turma.qtde;
-
-    
-}
-const handleDelete = async (codigo) =>{
-  const confirmacao = window.confirm("Confirma a exclusão?");
-
-  if(confirmacao){
-    try {
-       await turmaService.deleteTurma(codigo);
-       await carregaTurma();
-       alert("Turma excluída com sucesso!")
-    } catch (error) {
-        alert("Erro ao excluir turma!!")
-    }
-  }
-     
-}
-
-
-const atualizarTurma = async () => {
-    
-  
-  const codigo = document.getElementById('codigo').value
-  const descricao = document.getElementById('descricao').value
-  const anoTurma = document.getElementById('anoTurma').value;
-  const qtde = document.getElementById('qtde').value;
-  
-  const dados = {
-    codigo: codigo,
-    descricao: descricao,
-    anoTurma: anoTurma,
-    qtde: qtde
-  }
-  
-  console.log(dados)
-  try {
-    await turmaService.updateTurma(dados);
-    alert('Turma atualizado com sucesso!')
-    await carregaTurma();
-  } catch (error) {
-    alert('Erro ao atualizar! ')
-    console.log('Erro ao atualizar: ', error)
-  }
-}
+  },[])
 
 
 
-const handleReset = () => {
-  const inputElements = document.querySelectorAll("input, IMaskInput");
 
-  inputElements.forEach((input) => {
-      input.value = "";
-  });
-  window.location.reload();
-  carregaTurma();
-};
-
-async function getByNome(nomee) {
-
-  const nome = {
-    nome: `${nomee}`
-  }
-
-
-  try {
-
-    const dados = await turmaService.filtrar(nome)
-
-    if (dados.length > 0) {
-
-      const dadosFiltroNome = dados.map((turma) => (
-        {
-          codigo: `${turma.codigo}`,
-          descricao: `${turma.descricao}`,
-          anoTurma: `${turma.anoTurma}`,
-          qtde: `${turma.qtde}`,
-          
-        }
-      ));
-       
-      setTurma(dadosFiltroNome);
-  
-    }
-    else {
-      
-    }
-    
-  }
-  catch (erro) {
-
-  }
-  
-}
 
   return (
 
@@ -201,7 +129,7 @@ async function getByNome(nomee) {
           <div className="row">
             <div className="col-3">
               <span>DISCIPLINA</span>
-              <select class="form-control" id="anoTurma" name="anoTurma" onChange={handleInputChange} value={turmaData.anoTurma}>
+              <select class="form-control" id="disc_codigo" name="disc_codigo" onChange={(e)=> setCodigoDisciplina(e.target.value) } value={cronogramaData.disc_codigo}>
               {
                           lista.map((disciplina) => (
                             
@@ -212,7 +140,7 @@ async function getByNome(nomee) {
             </div>
             <div className="col-3">
               <span>TURMA</span>
-              <select class="form-control" id="anoTurma" name="anoTurma" onChange={handleInputChange} value={turmaData.anoTurma}>
+              <select class="form-control" id="tur_codigo" name="tur_codigo"  onChange={(e)=> setCodigoTurma(e.target.value) } value={cronogramaData.tur_codigo}>
               {
                     turma.map((turma)=>(
             
@@ -225,26 +153,21 @@ async function getByNome(nomee) {
               <span>DATA</span>
               <div class="input-group flex-nowrap">
                 <input
-                  name="dataNascimento"
-                  id="dataNascimento"
+                  name="data"
+                  id="data"
                   type="date"
                   class="form-control"
                   placeholder="dd/mm/aaaa"
-                  
-                  onChange={handleInputChange}
-               
+                  value={cronogramaData.data}
+                  onChange={(e)=> setData(e.target.value) } 
+          
                   required
                 />
               </div>
             </div>
           </div>
 
-          <div className="row">
-         
-
           
-          </div>
-
           <div className="row">&nbsp;</div>
 
       
@@ -257,7 +180,7 @@ async function getByNome(nomee) {
             </button>
           </div>
           <div className="col-3">
-            <button type="button" class="btn btn-info cor_botao"  onClick={() => atualizarTurma()}>
+            <button type="button" class="btn btn-info cor_botao"  >
               <i class="bi bi-pencil"></i>&nbsp; ATUALIZAR
             </button>
           </div>
@@ -266,7 +189,7 @@ async function getByNome(nomee) {
               type="button"
               value="reset"
               className="btn btn-secondary"
-              onClick={handleReset}
+             
             >
               <i class="bi bi-arrow-repeat"></i>&nbsp; LIMPAR
             </button>
@@ -290,10 +213,10 @@ async function getByNome(nomee) {
                     placeholder="Pesquisar por disciplina"
                     value={turma.nome}
                     onChange={handleInputChange}
-                    onBlur={(e) => setTurmaNome(e.target.value)}
+                    
                   />
                     &nbsp; &nbsp;
-                  <i class="bi bi-search my-custom-icon"  onClick={()=>getByNome(turmaNome)} ></i>
+                  <i class="bi bi-search my-custom-icon"  ></i>
               </div>
               </div>
             </div>
@@ -301,24 +224,33 @@ async function getByNome(nomee) {
               <table class="table">
                   <thead>
                       <tr>
-                          <th>CÓDIGO</th>
-                          <th>DESCRIÇÃO</th>
+                          <th>DATA</th>
+                          <th>NOME TURMA</th>
                           <th>ANO TURMA</th>
                           <th>QUANTIDADE</th>
-                     
+                          <th>NOME DISCIPLINA</th>
+                          <th>CARGA HORÁRIA</th>
+                          <th>OBSERVAÇÃO</th>
                       </tr>
                   </thead>
         <tbody>
         {
-            turma.map((turma)=>(
-                <tr key={turma.codigo}>
-                    <td>{turma.codigo} </td>
-                    <td>{turma.descricao} </td>
-                    <td>{turma.anoTurma} </td>
-                    <td>{turma.qtde} </td>
-                  
-                    <td><i class="bi bi-trash" style={{ color: 'red' }} onClick={()=>handleDelete(turma.codigo)}></i></td>
-                    <td><i class="bi bi-pen" style={{ color: 'blue' }} onClick={()=>handleEdit(turma)}></i></td>
+            
+            cronograma.map((cronograma)=>(
+
+
+                <tr key={cronograma.disc_codigo}>
+                
+                    <td>{cronograma.cro_data} </td>
+                    <td>{cronograma.descricao} </td>
+                    <td>{cronograma.anoTurma}</td>  
+                    <td>{cronograma.qtde} </td>
+                    <td>{cronograma.nome} </td>
+                    <td>{cronograma.carga} </td>
+                    <td>{cronograma.observacao} </td>
+                    
+                    <td><i class="bi bi-trash" style={{ color: 'red' }}></i></td>
+                    <td><i class="bi bi-pen" style={{ color: 'blue' }} ></i></td>
                 </tr>
             ))
         }
