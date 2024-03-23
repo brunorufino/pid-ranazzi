@@ -359,9 +359,6 @@ function CadastroDisciplina() {
         </div>
       </div>
 
-
-
-
       <div className="table-responsive">
         <table class="table" id="tabela">
           <thead>

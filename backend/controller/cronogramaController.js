@@ -10,9 +10,9 @@ async create(req,res){
     const codigo_disc = req.body.disc_codigo;
     const codigo_turma = req.body.tur_codigo;
     const data =  req.body.data;
- 
+   
 
-    if(codigo_disc,codigo_turma,data){
+    if(codigo_disc&&codigo_turma&&data){
        
         try {
             const result = await cronograma.gravar(codigo_disc,codigo_turma,data);
