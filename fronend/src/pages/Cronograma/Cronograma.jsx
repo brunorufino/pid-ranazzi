@@ -67,7 +67,29 @@ const carregaCronograma = async ()=>{
   }
 };
 
+const handleDelete = async (codigo,codigo_disc) =>{
   
+  
+  const dados = {
+    disc_codigo: codigo,
+    tur_codigo: codigo_disc,
+  }
+
+  const confirmacao = window.confirm("Confirma a exclusão?");
+
+
+  if(confirmacao){
+    try {
+       await cronogramaService.deleteCronograma(dados);
+       await carregaCronograma();  
+       alert("Turma excluída com sucesso!")
+    } catch (error) {
+        alert("Erro ao excluir turma!!")
+    }
+  }
+     
+}
+
   const handleInputChange =(event) => {
     const {name, value} = event.target;
     console.log({name, value})
@@ -78,7 +100,6 @@ const carregaCronograma = async ()=>{
 
 
   useEffect(() =>{
-
     carregaCronograma();
   },[])
 
@@ -112,10 +133,6 @@ const carregaCronograma = async ()=>{
 
     carregaDisciplinas()
   },[])
-
-
-
-
 
   return (
 
@@ -249,7 +266,7 @@ const carregaCronograma = async ()=>{
                     <td>{cronograma.carga} </td>
                     <td>{cronograma.observacao} </td>
                     
-                    <td><i class="bi bi-trash" style={{ color: 'red' }}></i></td>
+                    <td><i class="bi bi-trash" style={{ color: 'red' }} onClick={()=>handleDelete(cronograma.disc_codigo, cronograma.tur_codigo)}></i></td>
                     <td><i class="bi bi-pen" style={{ color: 'blue' }} ></i></td>
                 </tr>
             ))
