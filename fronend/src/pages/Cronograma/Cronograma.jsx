@@ -9,6 +9,7 @@ const disciplinaService = new DisciplinaService();
 const cronogramaService = new CronogramaService();
 
 function CadastroTurma() {
+  const [funcionarioNome, setFuncionarioNome] =  useState('');
   const [cronograma,setCronograma] = useState([]);
   const [cronogramaData, setCronogramaData] = useState([]);
   const [turma, setTurma] = useState([])
@@ -42,21 +43,54 @@ const [Horario, setHorario] = useState('')
     }
   }
   
+  async function getByNome(nomee) {
 
+    const nome = {
+      nome: `${nomee}`
+    }
+
+
+    try {
+
+      const dados = await cronogramaService.filtrar(nome)
+
+      if (dados.length > 0) {
+
+        const dadosFiltroNome = dados.map((cronograma) => (
+          {
+            data_formatada: `${cronograma.data_formatada}`,
+            turma_descricao: `${cronograma.turma_descricao}`,
+            anoTurma: `${cronograma.anoTurma}`,
+            qtde: `${cronograma.qtde}`,
+            disciplina_nome: `${cronograma.disciplina_nome}`,
+            hora_formatada: `${cronograma.hora_formatada}`,
+            observacao: `${cronograma.observacao}`
+          }
+        ))
+         
+        setCronograma(dadosFiltroNome);
+    
+      }
+      else {
+        //alert(`Não existe funcionários com nome: ${nomee}`)
+      }
+      
+    }
+    catch (erro) {
+
+    }
+    
+  }
 
   const updateCronograma = async () => {
     
-
-    alert("CHegou até aqui? ");
-
     const codigo_disciplina = document.getElementById('disc_codigo').value;
     const codigo_turma = document.getElementById('tur_codigo').value;
     const data = document.getElementById('data').value;
     const horario = document.getElementById('horario').value;
 
-
- 
-
+    console.log("TEste"+data);
+    
     const dados = {
       disc_codigo: codigo_disciplina,
       tur_codigo: codigo_turma,
@@ -98,11 +132,21 @@ const handleDelete = async (codigo_disciplina, codigo_turma) =>{
 const handleEdit= async (codigo_disc, codig_tur, data, horario)=>{
  
 
-  alert(data);
+ 
+// Use expressões regulares para extrair dia, mês e ano
+var regex = /(\d{2})\/(\d{2})\/(\d{4})/;
+var matches = regex.exec(data);
+var dia = matches[1];
+var mes = matches[2];
+var ano = matches[3];
+
+// Crie uma nova data no formato "aaaa-mm-dd"
+var dataUs = ano + '-' + mes + '-' + dia;
+
 
   document.getElementById('disc_codigo').value = codigo_disc;
   document.getElementById('tur_codigo').value = codig_tur;
-  document.getElementById('data').value = data;
+  document.getElementById('data').value = dataUs;
   document.getElementById('horario').value = horario;
 
   
@@ -227,9 +271,8 @@ const carregaCronograma = async ()=>{
                   type="date"
                   class="form-control"
                   placeholder="dd/mm/aaaa"
-                  value={cronogramaData.data}
                   onChange={(e)=> setData(e.target.value) } 
-          
+                  value={cronogramaData.data}
                   required
                 />
               </div>
@@ -299,10 +342,11 @@ const carregaCronograma = async ()=>{
                     placeholder="Pesquisar por disciplina"
                     value={turma.nome}
                     onChange={handleInputChange}
-                    
+                    onBlur={(e) => setFuncionarioNome(e.target.value)}
+                   
                   />
                     &nbsp; &nbsp;
-                  <i class="bi bi-search my-custom-icon"  ></i>
+                  <i class="bi bi-search my-custom-icon"  onClick={()=>getByNome(funcionarioNome)}  ></i>
               </div>
               </div>
             </div>

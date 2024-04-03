@@ -6,6 +6,7 @@ const cronogramaController = new CronogramaController()
 
 router.get('/', cronogramaController.getAll)
 router.post('/',cronogramaController.create)
+router.post('/:filtrar',cronogramaController.getByName)
 router.put('/', cronogramaController.update)
 router.delete('/', cronogramaController.delete)
 

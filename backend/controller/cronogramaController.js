@@ -42,7 +42,7 @@ async update(req,res){
     const data =  req.body.data;
     const horario = req.body.horario;
 
-
+    console.log(req.body);
 
     if(codigo_disc&&codigo_turma&&data&&horario){
        
@@ -53,7 +53,7 @@ async update(req,res){
                     return res.status(201).json({menssagem:'Horário alterado com sucesso'})
                 }
         } catch (error) {
-                console.log('Erro ao cadastrar a novo Horário:'+error);
+                console.log('Erro ao alterar o Horário:'+error);
                 res.status(500).json({
                     erro:"Internal Server Error",
                     mensagem:'Ocorreu um erro ao alterar a Horário!'})
@@ -103,6 +103,25 @@ async delete(req,res){
         res.status(500).json({error:'Ocorreu um erro ao consultar os horários!'})
     }
 }
+
+async getByName(req,res){
+
+    const filtro = req.body.nome;
+    console.log(filtro);
+    try {
+        const result = await cronograma.getByNome(filtro)
+        if(result){
+              return res.status(200).json(result)
+        }
+        else{
+            res.status(404).json({error:'Nenhuma disciplina foi localizada com esse nome'})
+        }
+    } catch (error) {
+        console.log('Erro ao consultar funcionário:'+error);
+        res.status(500).json({error:'Nenhuma disciplina foi localizada com esse nome!'})
+    }
+}
+
 
 }
 module.exports = CronogramaController;
