@@ -21,7 +21,7 @@ CREATE TABLE turma(
      descricao VARCHAR(60),
      anoTurma VARCHAR(60),
      qtde INT
-)
+);
 
 CREATE TABLE disciplinas (
     codigo INT AUTO_INCREMENT PRIMARY KEY,
@@ -52,6 +52,7 @@ CREATE TABLE cronograma (
     disc_codigo INT,
     tur_codigo INT,
     cro_data DATE,
+    horario VARCHAR(10),
     CONSTRAINT pk_disciplina FOREIGN KEY(disc_codigo) REFERENCES disciplinas(codigo),
     CONSTRAINT pk_turma FOREIGN KEY(tur_codigo) REFERENCES turma(codigo),
 );

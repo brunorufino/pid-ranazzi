@@ -19,10 +19,14 @@ class CronogramaService{
         }
     }
 
-    async deleteCronograma(codigo){
+    async deleteCronograma(dados){
         try {
             const response = await fetch(`${API_BASE_URL}/cronograma`,{
                 method:"DELETE",
+                headers:{
+                    'Content-Type':'application/json'
+                },
+                body:JSON.stringify(dados)
             })
             if(!response.ok){
                 
