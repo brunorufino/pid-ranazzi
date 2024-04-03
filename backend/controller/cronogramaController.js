@@ -10,12 +10,12 @@ async create(req,res){
     const codigo_disc = req.body.disc_codigo;
     const codigo_turma = req.body.tur_codigo;
     const data =  req.body.data;
-   
+    const horario = req.body.horario;
 
-    if(codigo_disc&&codigo_turma&&data){
+    if(codigo_disc&&codigo_turma&&data&&horario){
        
         try {
-            const result = await cronograma.gravar(codigo_disc,codigo_turma,data);
+            const result = await cronograma.gravar(codigo_disc,codigo_turma,data,horario);
 
                 if(result){
                     return res.status(201).json({menssagem:'Horário cadastrado com sucesso'})
@@ -40,12 +40,14 @@ async update(req,res){
     const codigo_disc = req.body.disc_codigo;
     const codigo_turma = req.body.tur_codigo;
     const data =  req.body.data;
- 
+    const horario = req.body.horario;
 
-    if(codigo_disc,codigo_turma,data){
+
+
+    if(codigo_disc&&codigo_turma&&data&&horario){
        
         try {
-            const result = await cronograma.update(codigo_disc,codigo_turma,data);
+            const result = await cronograma.update(codigo_disc,codigo_turma,data,horario);
 
                 if(result){
                     return res.status(201).json({menssagem:'Horário alterado com sucesso'})

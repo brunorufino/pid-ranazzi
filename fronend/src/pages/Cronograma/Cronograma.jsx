@@ -20,6 +20,7 @@ function CadastroTurma() {
  const [Data, setData] = useState('')
  const [Codigo_disciplina, setCodigoDisciplina] = useState('')
  const [Codigo_turma, setCodigoTurma] = useState('')
+const [Horario, setHorario] = useState('')
 
   const handleSubmit = async (event)=>{
     event.preventDefault();
@@ -27,7 +28,8 @@ function CadastroTurma() {
     const dados = {
       disc_codigo: Codigo_disciplina,
       tur_codigo: Codigo_turma,
-      data: Data
+      data: Data,
+      horario: Horario
     }
 
     try {
@@ -40,6 +42,73 @@ function CadastroTurma() {
     }
   }
   
+
+
+  const updateCronograma = async () => {
+    
+
+    alert("CHegou até aqui? ");
+
+    const codigo_disciplina = document.getElementById('disc_codigo').value;
+    const codigo_turma = document.getElementById('tur_codigo').value;
+    const data = document.getElementById('data').value;
+    const horario = document.getElementById('horario').value;
+
+
+ 
+
+    const dados = {
+      disc_codigo: codigo_disciplina,
+      tur_codigo: codigo_turma,
+      data: data,
+      horario: horario
+    }
+
+    try {
+      await cronogramaService.updateCronograma(dados);
+      alert('Cronograma atualizado com sucesso!')
+      await carregaCronograma();
+    } catch (error) {
+      console.log('Erro ao atualizar: ', error)
+      alert('Erro ao atualizar!')
+    }
+  }
+
+
+
+
+const handleDelete = async (codigo_disciplina, codigo_turma) =>{
+
+    const dados = {
+      disc_codigo: codigo_disciplina,
+      tur_codigo: codigo_turma
+    }
+    try {
+        await cronogramaService.deleteCronograma(dados)
+        alert('Horário cadastrado deletado com sucesso!')
+        await carregaCronograma();  
+    } catch (error) {
+      alert('Erro ao realizar a exclusão!')
+    }
+
+
+}
+
+
+const handleEdit= async (codigo_disc, codig_tur, data, horario)=>{
+ 
+
+  alert(data);
+
+  document.getElementById('disc_codigo').value = codigo_disc;
+  document.getElementById('tur_codigo').value = codig_tur;
+  document.getElementById('data').value = data;
+  document.getElementById('horario').value = horario;
+
+  
+}
+
+
   const carregaTurma = async ()=>{
     try {         
         const dados = await turmaService.getAllTurma();
@@ -165,11 +234,28 @@ const carregaCronograma = async ()=>{
                 />
               </div>
             </div>
+            
           </div>
+          <div>
 
+          </div>
           
           <div className="row">&nbsp;</div>
-
+          <div className="col-3">
+              <span>HORÁRIO</span>
+              <div class="input-group flex-nowrap">
+                <input
+                  name="horario"
+                  id="horario"
+                  type="text"
+                  class="form-control"
+                  placeholder="00:00"
+                  value={cronogramaData.horario}
+                  onChange={(e)=> setHorario(e.target.value) } 
+                  required
+                />
+              </div>
+            </div>
       
         </div>
 
@@ -180,7 +266,7 @@ const carregaCronograma = async ()=>{
             </button>
           </div>
           <div className="col-3">
-            <button type="button" class="btn btn-info cor_botao"  >
+            <button type="button" class="btn btn-info cor_botao"   onClick={() => updateCronograma()} >
               <i class="bi bi-pencil"></i>&nbsp; ATUALIZAR
             </button>
           </div>
@@ -229,8 +315,10 @@ const carregaCronograma = async ()=>{
                           <th>ANO TURMA</th>
                           <th>QUANTIDADE</th>
                           <th>NOME DISCIPLINA</th>
+                          <th>HORÁRIO</th>
                           <th>CARGA HORÁRIA</th>
                           <th>OBSERVAÇÃO</th>
+                          <th visible="false">Turma Código</th>
                       </tr>
                   </thead>
         <tbody>
@@ -241,16 +329,17 @@ const carregaCronograma = async ()=>{
 
                 <tr key={cronograma.disc_codigo}>
                 
-                    <td>{cronograma.cro_data} </td>
-                    <td>{cronograma.descricao} </td>
+                    <td>{cronograma.data_formatada} </td>
+                    <td>{cronograma.turma_descricao} </td>
                     <td>{cronograma.anoTurma}</td>  
                     <td>{cronograma.qtde} </td>
-                    <td>{cronograma.nome} </td>
-                    <td>{cronograma.carga} </td>
+                    <td>{cronograma.disciplina_nome} </td>
+                    <td>{cronograma.hora_formatada} </td>
+                    <td>{cronograma.qtde} </td>
                     <td>{cronograma.observacao} </td>
-                    
-                    <td><i class="bi bi-trash" style={{ color: 'red' }}></i></td>
-                    <td><i class="bi bi-pen" style={{ color: 'blue' }} ></i></td>
+                    <td> {cronograma.tur_codigo} </td>
+                    <td><i class="bi bi-trash" style={{ color: 'red' }}  onClick={ () => handleDelete(cronograma.disc_codigo, cronograma.tur_codigo)} ></i></td>
+                    <td><i class="bi bi-pen" style={{ color: 'blue' }}   onClick={ () => handleEdit(cronograma.disc_codigo, cronograma.tur_codigo,cronograma.data_formatada,cronograma.hora_formatada)} ></i></td>
                 </tr>
             ))
         }
