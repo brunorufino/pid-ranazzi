@@ -12,26 +12,27 @@ async create(req,res){
     const data =  req.body.data;
     const horario = req.body.horario;
 
-    if(codigo_disc&&codigo_turma&&data&&horario){
-       
-        try {
-            const result = await cronograma.gravar(codigo_disc,codigo_turma,data,horario);
+ 
+       if(codigo_disc&&codigo_turma&&data&&horario){
+                
+            try {
+                const result = await cronograma.gravar(codigo_disc,codigo_turma,data,horario);
 
-                if(result){
-                    return res.status(201).json({menssagem:'Horário cadastrado com sucesso'})
-                }
-        } catch (error) {
-                console.log('Erro ao cadastrar a novo Horário:'+error);
-                res.status(500).json({
-                    erro:"Internal Server Error",
-                    mensagem:'Ocorreu um erro ao cadastrar a Horário!'})
-        }
-    }
-    else{
-        res.status(400).json({
-            erro: "Bad Request",
-            mensagem:'Informe todos os campos obrigatórios'})
-    }
+                    if(result){
+                        return res.status(201).json({menssagem:'Horário cadastrado com sucesso'})
+                    }
+            } catch (error) {
+                    console.log('Erro ao cadastrar a novo Horário:'+error);
+                    res.status(500).json({
+                        erro:"Internal Server Error",
+                        mensagem:'Ocorreu um erro ao cadastrar a Horário!'})
+            }
+            }
+            else{
+                res.status(400).json({
+                    erro: "Bad Request",
+                    mensagem:'Informe todos os campos obrigatórios'})
+            }
 }
 
 async update(req,res){
@@ -122,6 +123,6 @@ async getByName(req,res){
     }
 }
 
-
 }
+
 module.exports = CronogramaController;

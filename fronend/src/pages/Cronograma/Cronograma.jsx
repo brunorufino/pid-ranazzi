@@ -362,17 +362,14 @@ const carregaCronograma = async ()=>{
                           <th>HORÁRIO</th>
                           <th>CARGA HORÁRIA</th>
                           <th>OBSERVAÇÃO</th>
-                          <th visible="false">Turma Código</th>
+                     
                       </tr>
                   </thead>
         <tbody>
         {
             
             cronograma.map((cronograma)=>(
-
-
                 <tr key={cronograma.disc_codigo}>
-                
                     <td>{cronograma.data_formatada} </td>
                     <td>{cronograma.turma_descricao} </td>
                     <td>{cronograma.anoTurma}</td>  
@@ -381,7 +378,6 @@ const carregaCronograma = async ()=>{
                     <td>{cronograma.hora_formatada} </td>
                     <td>{cronograma.qtde} </td>
                     <td>{cronograma.observacao} </td>
-                    <td> {cronograma.tur_codigo} </td>
                     <td><i class="bi bi-trash" style={{ color: 'red' }}  onClick={ () => handleDelete(cronograma.disc_codigo, cronograma.tur_codigo)} ></i></td>
                     <td><i class="bi bi-pen" style={{ color: 'blue' }}   onClick={ () => handleEdit(cronograma.disc_codigo, cronograma.tur_codigo,cronograma.data_formatada,cronograma.hora_formatada)} ></i></td>
                 </tr>
