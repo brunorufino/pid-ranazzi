@@ -12,26 +12,27 @@ async create(req,res){
     const data =  req.body.data;
     const horario = req.body.horario;
 
-    if(codigo_disc&&codigo_turma&&data&&horario){
-       
-        try {
-            const result = await cronograma.gravar(codigo_disc,codigo_turma,data,horario);
+ 
+       if(codigo_disc&&codigo_turma&&data&&horario){
+                
+            try {
+                const result = await cronograma.gravar(codigo_disc,codigo_turma,data,horario);
 
-                if(result){
-                    return res.status(201).json({menssagem:'Horário cadastrado com sucesso'})
-                }
-        } catch (error) {
-                console.log('Erro ao cadastrar a novo Horário:'+error);
-                res.status(500).json({
-                    erro:"Internal Server Error",
-                    mensagem:'Ocorreu um erro ao cadastrar a Horário!'})
-        }
-    }
-    else{
-        res.status(400).json({
-            erro: "Bad Request",
-            mensagem:'Informe todos os campos obrigatórios'})
-    }
+                    if(result){
+                        return res.status(201).json({menssagem:'Horário cadastrado com sucesso'})
+                    }
+            } catch (error) {
+                    console.log('Erro ao cadastrar a novo Horário:'+error);
+                    res.status(500).json({
+                        erro:"Internal Server Error",
+                        mensagem:'Ocorreu um erro ao cadastrar a Horário!'})
+            }
+            }
+            else{
+                res.status(400).json({
+                    erro: "Bad Request",
+                    mensagem:'Informe todos os campos obrigatórios'})
+            }
 }
 
 async update(req,res){
@@ -42,7 +43,7 @@ async update(req,res){
     const data =  req.body.data;
     const horario = req.body.horario;
 
-
+    console.log(req.body);
 
     if(codigo_disc&&codigo_turma&&data&&horario){
        
@@ -53,7 +54,7 @@ async update(req,res){
                     return res.status(201).json({menssagem:'Horário alterado com sucesso'})
                 }
         } catch (error) {
-                console.log('Erro ao cadastrar a novo Horário:'+error);
+                console.log('Erro ao alterar o Horário:'+error);
                 res.status(500).json({
                     erro:"Internal Server Error",
                     mensagem:'Ocorreu um erro ao alterar a Horário!'})
@@ -104,5 +105,24 @@ async delete(req,res){
     }
 }
 
+async getByName(req,res){
+
+    const filtro = req.body.nome;
+    console.log(filtro);
+    try {
+        const result = await cronograma.getByNome(filtro)
+        if(result){
+              return res.status(200).json(result)
+        }
+        else{
+            res.status(404).json({error:'Nenhuma disciplina foi localizada com esse nome'})
+        }
+    } catch (error) {
+        console.log('Erro ao consultar funcionário:'+error);
+        res.status(500).json({error:'Nenhuma disciplina foi localizada com esse nome!'})
+    }
 }
+
+}
+
 module.exports = CronogramaController;
