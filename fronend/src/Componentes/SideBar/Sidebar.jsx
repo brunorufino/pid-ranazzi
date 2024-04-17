@@ -49,6 +49,12 @@ function Sidebar() {
               <i class="bi bi-file-earmark-richtext"></i> CRONOGRAMA
             </a>
           </li>
+          <li>
+            <a href="/notas" class="nav-link text-white">
+              {" "}
+              <i class="bi bi-file-earmark-richtext"></i> NOTAS
+            </a>
+          </li>
         </ul>
         <hr></hr>
       </div>

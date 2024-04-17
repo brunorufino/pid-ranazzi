@@ -26,12 +26,16 @@ const [Horario, setHorario] = useState('')
   const handleSubmit = async (event)=>{
     event.preventDefault();
     
+
+    
     const dados = {
       disc_codigo: Codigo_disciplina,
       tur_codigo: Codigo_turma,
       data: Data,
       horario: Horario
     }
+
+   console.log("Tela: "+dados)
 
     try {
     
@@ -89,8 +93,7 @@ const [Horario, setHorario] = useState('')
     const data = document.getElementById('data').value;
     const horario = document.getElementById('horario').value;
 
-    console.log("TEste"+data);
-    
+
     const dados = {
       disc_codigo: codigo_disciplina,
       tur_codigo: codigo_turma,
@@ -286,18 +289,29 @@ const carregaCronograma = async ()=>{
           <div className="row">&nbsp;</div>
           <div className="col-3">
               <span>HORÁRIO</span>
-              <div class="input-group flex-nowrap">
-                <input
-                  name="horario"
-                  id="horario"
-                  type="text"
-                  class="form-control"
-                  placeholder="00:00"
-                  value={cronogramaData.horario}
-                  onChange={(e)=> setHorario(e.target.value) } 
-                  required
-                />
-              </div>
+
+                <select  id="horario" name="horario" onChange={(e)=> setHorario(e.target.value) }  value={cronogramaData.horario}>
+                      <option value="8:00">6:00</option>
+                      <option value="7:00">7:00</option>
+                      <option value="8:00">8:00</option>
+                      <option value="9:00">9:00</option>
+                      <option value="10:00">10:00</option>
+                      <option value="11:00">11:00</option>
+                      <option value="12:00">12:00</option>
+                      <option value="13:00">13:00</option>
+                      <option value="14:00">14:00</option>
+                      <option value="15:00">15:00</option>
+                      <option value="16:00">16:00</option>
+                      <option value="17:00">17:00</option>
+                      <option value="18:00">18:00</option>
+                      <option value="19:00">19:00</option>
+                      <option value="20:00">20:00</option>
+                      <option value="21:00">21:00</option>
+                      <option value="22:00">22:00</option>
+                </select>
+
+
+
             </div>
       
         </div>
