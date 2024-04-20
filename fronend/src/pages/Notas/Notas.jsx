@@ -1,61 +1,62 @@
 import "./notas.css";
-import TurmaService from "../services/TurmaService";
+import NotasService from "../services/NotasService";
 import { useEffect, useState } from "react";
 
-const turmaService = new TurmaService();
+const NotaService = new NotasService();
 
-function Notas() {
+function Notass() {
 
-
-  const [turmaData, setTurmaData] = useState({});
-  const [turma, setTurma] = useState([])
-  const [turmaNome, setTurmaNome] =  useState('');
+  const [NotasData, setNotasData] = useState({});
+  const [Notas, setNotas] = useState([])
+  const [NotasNome, setNotasNome] =  useState('');
 
   const handleSubmit = async (event)=>{
     event.preventDefault();
  
     try {
-        await turmaService.createTurma(turmaData)
-        alert('Turma cadastrado com sucesso!')
-        await carregaTurma();  
+        await NotaService.createNota(NotasData)
+        alert('Notass cadastrado com sucesso!')
+        await carregaNotass();  
     } catch (error) {
       alert('Erro ao Alterar!')
     }
   }
   
-  const carregaTurma = async ()=>{
+  const carregaNotass = async ()=>{
     try {         
-        const dados = await turmaService.getAllTurma();
-        setTurma(dados);
+        const dados = await NotaService.getAllNota();
+
+        console.log(dados);
+        setNotas(dados);
 
     } catch (error) {
-        console.error("Erro ao carregar Turma")
+        console.error("Erro ao carregar Notass")
     }
 };
 
 useEffect(()=>{
   
-  carregaTurma();
+  carregaNotass();
 },[]);
 
 
   
   const handleInputChange =(event) => {
     const {name, value} = event.target;
-    setTurmaData({...turmaData,[name]:value})
+    setNotasData({...NotasData,[name]:value})
   }                                                       
 
-  const handleEdit= async (turma)=>{
+  const handleEdit= async (Notass)=>{
     const btnCadastrar = document.getElementById('CADSATRAR');
     const campoCodigo = document.getElementById('codigo');
 
     btnCadastrar.disabled = true;
     campoCodigo.disabled = true;
 
-    document.getElementById('codigo').value = turma.codigo;
-    document.getElementById('anoTurma').value = turma.anoTurma;
-    document.getElementById('descricao').value = turma.descricao;
-    document.getElementById('qtde').value = turma.qtde;
+    document.getElementById('codigo').value = Notass.codigo;
+    document.getElementById('anoNotass').value = Notass.anoNotass;
+    document.getElementById('descricao').value = Notass.descricao;
+    document.getElementById('qtde').value = Notass.qtde;
 
     
 }
@@ -64,41 +65,45 @@ const handleDelete = async (codigo) =>{
 
   if(confirmacao){
     try {
-       await turmaService.deleteTurma(codigo);
-       await carregaTurma();
-       alert("Turma excluída com sucesso!")
+       await NotaService.deleteNota(codigo);
+       await carregaNotass();
+       alert("Notass excluída com sucesso!")
     } catch (error) {
-        alert("Erro ao excluir turma!!")
+        alert("Erro ao excluir Notass!!")
     }
   }
      
 }
 
 
-const atualizarTurma = async () => {
+const atualizarNotass = async () => {
     
-  
+
   const codigo = document.getElementById('codigo').value
   const descricao = document.getElementById('descricao').value
-  const anoTurma = document.getElementById('anoTurma').value;
+  const anoNotas = document.getElementById('anoNotass').value;
   const qtde = document.getElementById('qtde').value;
   
   const dados = {
     codigo: codigo,
     descricao: descricao,
-    anoTurma: anoTurma,
+    anoNotass: anoNotas,
     qtde: qtde
+
+
   }
   
   console.log(dados)
   try {
-    await turmaService.updateTurma(dados);
-    alert('Turma atualizado com sucesso!')
-    await carregaTurma();
+    await NotaService.updateNotass(dados);
+    alert('Notass atualizado com sucesso!')
+    await carregaNotass();
   } catch (error) {
     alert('Erro ao atualizar! ')
     console.log('Erro ao atualizar: ', error)
   }
+
+
 }
 
 
@@ -110,7 +115,7 @@ const handleReset = () => {
       input.value = "";
   });
   window.location.reload();
-  carregaTurma();
+  carregaNotass();
 };
 
 async function getByNome(nomee) {
@@ -122,21 +127,21 @@ async function getByNome(nomee) {
 
   try {
 
-    const dados = await turmaService.filtrar(nome)
+    const dados = await NotaService.filtrar(nome)
 
     if (dados.length > 0) {
 
-      const dadosFiltroNome = dados.map((turma) => (
+      const dadosFiltroNome = dados.map((Notass) => (
         {
-          codigo: `${turma.codigo}`,
-          descricao: `${turma.descricao}`,
-          anoTurma: `${turma.anoTurma}`,
-          qtde: `${turma.qtde}`,
+          codigo: `${Notass.codigo}`,
+          descricao: `${Notass.descricao}`,
+          anoNotass: `${Notass.anoNotass}`,
+          qtde: `${Notass.qtde}`,
           
         }
       ));
        
-      setTurma(dadosFiltroNome);
+      setNotas(dadosFiltroNome);
   
     }
     else {
@@ -155,7 +160,7 @@ async function getByNome(nomee) {
 
     <form className="alinhamento" onSubmit={handleSubmit}>
       <div class="card">
-        <h5 class="card-header">GERENCIAR NOTAS</h5>
+        <h5 class="card-header">GERENCIAR NotasS</h5>
         <div class="card-body ">
           <div className="row">
             <div className="col-3">
@@ -168,7 +173,7 @@ async function getByNome(nomee) {
                   onChange={handleInputChange}
                   id="codigo"
                   name="codigo"
-                  value={turmaData.codigo}
+                  value={NotasData.codigo}
                   
                 />
                 &nbsp; &nbsp;
@@ -185,7 +190,7 @@ async function getByNome(nomee) {
                   onChange={handleInputChange}
                   id="descricao"
                   name="descricao"
-                  value={turmaData.descricao}
+                  value={NotasData.descricao}
                 />
                  &nbsp; &nbsp;
                 <i class="bi bi-search my-custom-icon"></i>
@@ -196,7 +201,7 @@ async function getByNome(nomee) {
           </div>
           <div className="row">
             <div className="col-3">
-              <span>TURMA&nbsp;<b>*</b></span>
+              <span>Notas&nbsp;<b>*</b></span>
               <div class="input-group flex-nowrap">
                 <input
                   type="text"
@@ -205,7 +210,7 @@ async function getByNome(nomee) {
                   onChange={handleInputChange}
                   id="descricao"
                   name="descricao"
-                  value={turmaData.descricao}
+                  value={NotasData.descricao}
                 />
                  &nbsp; &nbsp;
                 <i class="bi bi-search my-custom-icon"></i>
@@ -213,7 +218,7 @@ async function getByNome(nomee) {
             </div>
 
             <div className="col-1">
-              <span>NOTA&nbsp;<b>*</b></span>
+              <span>Notas&nbsp;<b>*</b></span>
               <div class="input-group flex-nowrap">
                 <input
                   type="text"
@@ -221,7 +226,7 @@ async function getByNome(nomee) {
                   placeholder="0 A 10"
                   id="qtde"
                   name="qtde"
-                  value={turmaData.qtde}
+                  value={NotasData.qtde}
                   onChange={handleInputChange}
                 />
               </div>
@@ -240,7 +245,7 @@ async function getByNome(nomee) {
                   onChange={handleInputChange}
                   id="descricao"
                   name="descricao"
-                  value={turmaData.descricao}
+                  value={NotasData.descricao}
                 />
               </div>
             </div>
@@ -253,7 +258,7 @@ async function getByNome(nomee) {
                 onChange={handleInputChange}
                 id="checkboxId" 
                 name="checkboxName" 
-                value={turmaData.descricao}
+                value={NotasData.descricao}
                />
               </div>
             </div>
@@ -266,7 +271,7 @@ async function getByNome(nomee) {
                 onChange={handleInputChange}
                 id="checkboxId" 
                 name="checkboxName" 
-                value={turmaData.descricao}
+                value={NotasData.descricao}
                />
               </div>
             </div>
@@ -279,7 +284,7 @@ async function getByNome(nomee) {
                   placeholder="0 A 10"
                   id="qtde"
                   name="qtde"
-                  value={turmaData.qtde}
+                  value={NotasData.qtde}
                   onChange={handleInputChange}
                 />
               </div>
@@ -310,7 +315,7 @@ async function getByNome(nomee) {
             </button>
           </div>
           <div className="col-3">
-            <button type="button" class="btn btn-info cor_botao"  onClick={() => atualizarTurma()}>
+            <button type="button" class="btn btn-info cor_botao"  onClick={() => atualizarNotass()}>
               <i class="bi bi-pencil"></i>&nbsp; ATUALIZAR
             </button>
           </div>
@@ -347,12 +352,12 @@ async function getByNome(nomee) {
                       type="text"
                       class="form-control"
                       placeholder="Pesquisar por aluno"
-                      value={turma.nome}
+                      value={Notass.nome}
                       onChange={handleInputChange}
-                      onBlur={(e) => setTurmaNome(e.target.value)}
+                      onBlur={(e) => setNotasNome(e.target.value)}
                     />
                       &nbsp; &nbsp;
-                    <i class="bi bi-search my-custom-icon"  onClick={()=>getByNome(turmaNome)} ></i> &nbsp;&nbsp;&nbsp;
+                    <i class="bi bi-search my-custom-icon"  onClick={()=>getByNome(NotasNome)} ></i> &nbsp;&nbsp;&nbsp;
                 </div>
               </div>
               <div class="col-3">
@@ -363,12 +368,12 @@ async function getByNome(nomee) {
                       type="text"
                       class="form-control"
                       placeholder="Pesquisar por disciplina"
-                      value={turma.nome}
+                      value={Notass.nome}
                       onChange={handleInputChange}
-                      onBlur={(e) => setTurmaNome(e.target.value)}
+                      onBlur={(e) => setNotasNome(e.target.value)}
                     />
                       &nbsp; &nbsp;
-                    <i class="bi bi-search my-custom-icon"  onClick={()=>getByNome(turmaNome)} ></i> &nbsp;&nbsp;&nbsp;
+                    <i class="bi bi-search my-custom-icon"  onClick={()=>getByNome(NotasNome)} ></i> &nbsp;&nbsp;&nbsp;
                 </div>
               </div>
               <div class="col-3">
@@ -378,13 +383,13 @@ async function getByNome(nomee) {
                       id="nomePesquisa"
                       type="text"
                       class="form-control"
-                      placeholder="Pesquisar por turma"
-                      value={turma.nome}
+                      placeholder="Pesquisar por Notass"
+                      value={Notass.nome}
                       onChange={handleInputChange}
-                      onBlur={(e) => setTurmaNome(e.target.value)}
+                      onBlur={(e) => setNotasNome(e.target.value)}
                     />
                       &nbsp; &nbsp;
-                    <i class="bi bi-search my-custom-icon"  onClick={()=>getByNome(turmaNome)} ></i>
+                    <i class="bi bi-search my-custom-icon"  onClick={()=>getByNome(NotasNome)} ></i>
                 </div>
               </div>
             </div>
@@ -396,25 +401,29 @@ async function getByNome(nomee) {
                   <thead>
                       <tr>
                           <th>ALUNO</th>
-                          <th>DISCIPLINA</th>
                           <th>TURMA</th>
+                          <th>DISCIPLINA</th>
                           <th>NOTA</th>
+                          <th>DATA</th>
                           <th>TIPO AVALIAÇÃO</th>
                           <th>DATA AVALIAÇÃO</th>
+                          <th>OBSERVAÇÃO</th>
                       </tr>
                   </thead>
         <tbody>
         {
-            turma.map((turma)=>(
-                <tr key={turma.codigo}>
-                    <td>{turma.codigo} </td>
-                    <td>{turma.descricao} </td>
-                    <td>{turma.anoTurma} </td>
-                    <td>{turma.qtde} </td>
-                    <td>{turma.anoTurma} </td>
-                    <td>{turma.qtde} </td>
-                    <td><i class="bi bi-trash" style={{ color: 'red' }} onClick={()=>handleDelete(turma.codigo)}></i></td>
-                    <td><i class="bi bi-pen" style={{ color: 'blue' }} onClick={()=>handleEdit(turma)}></i></td>
+            Notas.map((Notas)=>(
+                <tr key={Notas.codigo}>
+                    <td>{Notas.nome_aluno} </td>
+                    <td>{Notas.descricao_turma} </td>
+                    <td>{Notas.nome_disciplina} </td>
+                    <td>{Notas.valor_nota} </td>
+                    <td>{Notas.data_avaliacao} </td>
+                    <td>{Notas.tipo_avaliacao} </td>
+                    <td>{Notas.peso_avaliacao} </td>
+                    <td>{Notas.observacao} </td>
+                    <td><i class="bi bi-trash" style={{ color: 'red' }} onClick={()=>handleDelete(Notas.codigo)}></i></td>
+                    <td><i class="bi bi-pen" style={{ color: 'blue' }} onClick={()=>handleEdit(Notas)}></i></td>
                 </tr>
             ))
         }
@@ -430,4 +439,4 @@ async function getByNome(nomee) {
   );
 }
 
-export default Notas;
+export default Notass;

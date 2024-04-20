@@ -25,6 +25,10 @@ app.use('/aluno',alunoRoutes);
 const cronogramaRoutes = require('./routes/cronogramaRoutes')
 app.use('/cronograma',cronogramaRoutes)
 
+const notasController = require('./routes/notaRoutes')
+app.use('/notas',notasController)
+
+
 app.listen(port, ()=> {
     console.log('Rodando na porta: '+ port);
 })
