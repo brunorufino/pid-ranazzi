@@ -1,23 +1,46 @@
 import "./notas.css";
 import NotasService from "../services/NotasService";
 import { useEffect, useState } from "react";
+import CadastroAlunoService from "../../pages/services/servicesAluno";
+import DisciplinaService from '../services/DisciplinaServices';
+import TurmaService from "../../pages/services/TurmaService";
 
 const NotaService = new NotasService();
+const CadastroAlunoServices = new CadastroAlunoService();
+const turmaService = new TurmaService();
+const disciplinaService = new DisciplinaService();
 
 function Notass() {
 
-  const [NotasData, setNotasData] = useState({});
-  const [Notas, setNotas] = useState([])
-  const [turmaNome, setTurmaNome] =  useState('');
-  const [alunoNome, setAlunoNome] =  useState('');
-  const [disciplinaNome, setDisciplinaNome] =  useState('');
+const [NotasData, setNotasData] = useState({});
+const [Notas, setNotas] = useState([])
+const [turmaNome, setTurmaNome] =  useState('');
+const [alunoNome, setAlunoNome] =  useState('');
+const [disciplinaNome, setDisciplinaNome] =  useState('');
+const [cpfAluno, setCpfAluno] = useState('');
+const [codigoDisciplina,setCodigoDisciplina] = useState('');
+const [codigoTurma,setCodigoTurma] = useState('');
+const [tipoAvaliacao, setTipoAvaliacao] = useState("Prova");
 
   const handleSubmit = async (event)=>{
     event.preventDefault();
- 
+    
+
+    const requestBody = {
+       cpf_aluno: cpfAluno,
+       codigo_turma: codigoTurma,
+       codigo_disciplina : codigoDisciplina,
+       valor_nota: NotasData.valor_nota,
+       data_avaliacao: NotasData.data_avaliacao,
+       tipo_avaliacao: tipoAvaliacao,
+       peso_avaliacao: NotasData.peso_avaliacao,
+       observacao : NotasData.observacao
+    }
+
+    console.log(requestBody);
     try {
-        await NotaService.createNota(NotasData)
-        alert('Notass cadastrado com sucesso!')
+        await NotaService.createNota(requestBody)
+        alert('Notas cadastrado com sucesso!')
         await carregaNotass();  
     } catch (error) {
       alert('Erro ao cadastrar nota do aluno!')
@@ -45,6 +68,21 @@ useEffect(()=>{
   const handleInputChange =(event) => {
     const {name, value} = event.target;
     setNotasData({...NotasData,[name]:value})
+
+    if (name === "tipo_avaliacao") {
+      setTipoAvaliacao(value);
+    }
+
+    if (name === "valor_nota" && (value < 0 || value > 10)) {
+      alert("Informe uma nota válida [0-10]")
+      return;
+    }
+
+    if (name === "peso_avaliacao" && (value < 0 || value > 10)) {
+      alert("Informe um valor válido [0-10]")
+      return;
+    }
+
   }                                                       
 
   const handleEdit= async (Notass)=>{
@@ -119,6 +157,68 @@ const handleReset = () => {
   carregaNotass();
 };
 
+
+async function BuscarAluno(nomee) {
+  const nome = {
+    nome: `${nomee}`
+  };
+  try {
+
+       const dados = await CadastroAlunoServices.filtrar(nome);
+
+    if (dados.length > 0) {
+      setCpfAluno(dados[0].cpf)
+      NotasData.nome_aluno = dados[0].nome;
+
+    } else {
+      alert("Nenhum aluno encontrado");
+    }
+  } catch (erro) {}
+}
+
+async function BuscarDisciplina(nomee) {
+  const nome = {
+    nome: `${nomee}`
+  };
+  try {
+
+       const dados = await disciplinaService.getByNome(nome);
+
+    if (dados.length > 0) {
+      setCodigoDisciplina(dados[0].codigo);
+      NotasData.nome_disciplina = dados[0].nome;
+
+    } else {
+      
+      alert("Nenhuma disciplina encontrada");
+    }
+  } catch (erro) {}
+}
+
+async function BuscarTurma(nomee) {
+  const nome = {
+    nome: `${nomee}`
+  }
+
+
+  try {
+    const dados = await turmaService.filtrar(nome)
+    if (dados.length > 0) {
+       
+      setCodigoTurma(dados[0].codigo);
+     NotasData.descricao_turma = dados[0].descricao;
+    }
+    else{
+      alert("Nenhuma turma foi encontrada");
+    }
+   
+  }
+  catch (erro) {
+
+  }
+}
+
+
 async function getByNome(nomee, chave) {
 
   let body = "";
@@ -174,6 +274,7 @@ async function getByNome(nomee, chave) {
   
 }
 
+
   return (
     <form className="alinhamento" onSubmit={handleSubmit}>
       <div class="card">
@@ -183,6 +284,7 @@ async function getByNome(nomee, chave) {
             <div className="col-3">
               <span>ALUNO&nbsp;<b>*</b></span>
               <div class="input-group flex-nowrap">
+                
                 <input
                   type="text"
                   class="form-control"
@@ -191,10 +293,9 @@ async function getByNome(nomee, chave) {
                   id="nome_aluno"
                   name="nome_aluno"
                   value={NotasData.nome_aluno}
-                  
                 />
                 &nbsp; &nbsp;
-                <i class="bi bi-search my-custom-icon"></i>
+                <i class="bi bi-search my-custom-icon"    onClick={() => BuscarAluno(NotasData.nome_aluno)}></i>
               </div>
             </div>
             <div className="col-3">
@@ -205,12 +306,12 @@ async function getByNome(nomee, chave) {
                   class="form-control"
                   placeholder=""
                   onChange={handleInputChange}
-                  id=" nome_disciplina"
-                  name=" nome_disciplina"
+                  id="nome_disciplina"
+                  name="nome_disciplina"
                   value={NotasData.nome_disciplina}
                 />
                  &nbsp; &nbsp;
-                <i class="bi bi-search my-custom-icon"></i>
+                <i class="bi bi-search my-custom-icon" onClick={() => BuscarDisciplina(NotasData.nome_disciplina)}></i>
               </div>
             </div>
           </div>
@@ -230,7 +331,7 @@ async function getByNome(nomee, chave) {
                   value={NotasData.descricao_turma}
                 />
                  &nbsp; &nbsp;
-                <i class="bi bi-search my-custom-icon"></i>
+                <i class="bi bi-search my-custom-icon"  onClick={() => BuscarTurma(NotasData.descricao_turma)}></i>
               </div>
             </div>
 
@@ -273,9 +374,9 @@ async function getByNome(nomee, chave) {
                 type="radio"
                 class="form-check-input"
                 onChange={handleInputChange}
-                id="tipo_avaliacao" 
+                id="prova" 
                 name="tipo_avaliacao" 
-                value={NotasData.tipo_avaliacao}
+                value="Prova"
                 checked
                />
               </div>
@@ -287,9 +388,9 @@ async function getByNome(nomee, chave) {
                 type="radio"
                 class="form-check-input"
                 onChange={handleInputChange}
-                id="tipo_avaliacao" 
+                id="trabalho" 
                 name="tipo_avaliacao" 
-                value={NotasData.tipo_avaliacao}
+                value="Trabalho"
                />
               </div>
             </div>
@@ -323,7 +424,7 @@ async function getByNome(nomee, chave) {
                 OBSERVAÇÕES <span className="span">*</span>
               </label>
               <div className="input-group flex-nowrap">
-                <textarea name="observacao" id="obs" cols="70" rows="4">
+                <textarea name="observacao" id="observacao" cols="70" rows="4" value={NotasData.observacao} onChange={handleInputChange}>
 
                 </textarea>
               </div>
