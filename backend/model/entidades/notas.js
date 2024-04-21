@@ -89,6 +89,49 @@ const banco = new DataBase();
     return result;
     }
 
+    async getByNameTurma (nomeTurma){
+        var sql = `  SELECT n.id,
+                                a.nome AS nome_aluno,
+                                a.cpf AS cpf_aluno,
+                                t.descricao AS descricao_turma,
+                                d.nome AS nome_disciplina,
+                                n.valor_nota,
+                                n.data_avaliacao,
+                                n.tipo_avaliacao,
+                                n.peso_avaliacao,
+                                n.observacao
+                                FROM notas AS n
+                                INNER JOIN Aluno AS a ON n.aluno_cpf = a.cpf
+                                INNER JOIN turma AS t ON n.turma_codigo = t.codigo
+                                INNER JOIN disciplinas AS d ON n.disciplina_codigo = d.codigo 
+                                WHERE  t.descricao like '%${nomeTurma}%'`;
+    const result = await banco.ExecutaComando(sql);
+    return result;
+    }
+
+
+    async getByNameDisciplina (nome_disciplina){
+
+        var sql = `  SELECT n.id,
+        a.nome AS nome_aluno,
+        a.cpf AS cpf_aluno,
+        t.descricao AS descricao_turma,
+        d.nome AS nome_disciplina,
+        n.valor_nota,
+        n.data_avaliacao,
+        n.tipo_avaliacao,
+        n.peso_avaliacao,
+        n.observacao
+        FROM notas AS n
+        INNER JOIN Aluno AS a ON n.aluno_cpf = a.cpf
+        INNER JOIN turma AS t ON n.turma_codigo = t.codigo
+        INNER JOIN disciplinas AS d ON n.disciplina_codigo = d.codigo 
+        WHERE   d.nome like '%${nome_disciplina}%'`;
+        const result = await banco.ExecutaComando(sql);
+        return result;
+        
+    }
+
 
    
     async validarCPF(cpf) {

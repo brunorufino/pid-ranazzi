@@ -98,23 +98,53 @@ class NotasContoller{
         }
      }
 
-     async getByName(req,res){
+     async getByNotas(req,res){
+       
+        let filtro = "";
+        let aluno = req.body.aluno;
+        let turma = req.body.turma;
+        let disciplina = req.body.disciplina;
 
-        const filtro = req.body.nome;
-        console.log(filtro);
+        if (aluno) {
+            filtro = aluno;
+        }
+        else if(turma){
+            filtro = turma;
+        }
+        else{
+            filtro = disciplina;
+        }
+
+
+       let result = "";
         try {
-            const result = await nota.getByNome(filtro)
+            if(aluno) {
+                 result = await nota.getByNome(filtro);
+            }       
+            else{
+                if(turma){
+                    result = await nota.getByNameTurma(filtro);
+                }
+                else{
+                    result = await nota.getByNameDisciplina(filtro)
+                }
+            }
             if(result){
                   return res.status(200).json(result)
             }
             else{
-                res.status(404).json({error:'Nenhum Notas foi localizado com esse nome'})
+                res.status(404).json({error:'Nenhum aluno foi localizado com esse nome'})
             }
         } catch (error) {
             console.log('Erro ao consultar Notas:'+error);
             res.status(500).json({error:'Ocorreu um erro ao consultar a Notas!'})
         }
+
+
+
     }
+
+
 
      async delete(req,res){
         const codigo = req.params.codigo;

@@ -8,7 +8,9 @@ function Notass() {
 
   const [NotasData, setNotasData] = useState({});
   const [Notas, setNotas] = useState([])
-  const [NotasNome, setNotasNome] =  useState('');
+  const [turmaNome, setTurmaNome] =  useState('');
+  const [alunoNome, setAlunoNome] =  useState('');
+  const [disciplinaNome, setDisciplinaNome] =  useState('');
 
   const handleSubmit = async (event)=>{
     event.preventDefault();
@@ -18,7 +20,7 @@ function Notass() {
         alert('Notass cadastrado com sucesso!')
         await carregaNotass();  
     } catch (error) {
-      alert('Erro ao Alterar!')
+      alert('Erro ao cadastrar nota do aluno!')
     }
   }
   
@@ -26,7 +28,6 @@ function Notass() {
     try {         
         const dados = await NotaService.getAllNota();
 
-        console.log(dados);
         setNotas(dados);
 
     } catch (error) {
@@ -118,35 +119,53 @@ const handleReset = () => {
   carregaNotass();
 };
 
-async function getByNome(nomee) {
+async function getByNome(nomee, chave) {
 
-  const nome = {
-    nome: `${nomee}`
+  let body = "";
+
+
+  if(chave === "aluno"){
+        body = {
+        aluno: `${nomee}`
+      }
   }
+  else{
+     if(chave === "turma"){
+      body = {
+        turma: `${nomee}`
+      }
+     }else{
+      body = {
+        disciplina: `${nomee}`
+      }
+     }
+  }
+    
 
 
   try {
 
-    const dados = await NotaService.filtrar(nome)
-
+    const dados = await NotaService.filtrar(body)
     if (dados.length > 0) {
 
-      const dadosFiltroNome = dados.map((Notass) => (
-        {
-          codigo: `${Notass.codigo}`,
-          descricao: `${Notass.descricao}`,
-          anoNotass: `${Notass.anoNotass}`,
-          qtde: `${Notass.qtde}`,
-          
-        }
-      ));
-       
-      setNotas(dadosFiltroNome);
-  
+        const dadosFiltroNotas = dados.map((Notas) => ({
+        codigo: Notas.id,
+        nome_aluno: Notas.nome_aluno,
+        descricao_turma: Notas.descricao_turma,
+        nome_disciplina: Notas.nome_disciplina,
+        valor_nota: Notas.valor_nota,
+        data_avaliacao: Notas.data_avaliacao,
+        tipo_avaliacao: Notas.tipo_avaliacao,
+        peso_avaliacao: Notas.peso_avaliacao,
+        observacao: Notas.observacao
+      }))
+
+      setNotas(dadosFiltroNotas);  
     }
-    else {
-      
+    else{
+      carregaNotass();
     }
+    
     
   }
   catch (erro) {
@@ -155,12 +174,10 @@ async function getByNome(nomee) {
   
 }
 
-
   return (
-
     <form className="alinhamento" onSubmit={handleSubmit}>
       <div class="card">
-        <h5 class="card-header">GERENCIAR NotasS</h5>
+        <h5 class="card-header">GERENCIAR NOTAS</h5>
         <div class="card-body ">
           <div className="row">
             <div className="col-3">
@@ -171,9 +188,9 @@ async function getByNome(nomee) {
                   class="form-control"
                   placeholder=""
                   onChange={handleInputChange}
-                  id="codigo"
-                  name="codigo"
-                  value={NotasData.codigo}
+                  id="nome_aluno"
+                  name="nome_aluno"
+                  value={NotasData.nome_aluno}
                   
                 />
                 &nbsp; &nbsp;
@@ -188,9 +205,9 @@ async function getByNome(nomee) {
                   class="form-control"
                   placeholder=""
                   onChange={handleInputChange}
-                  id="descricao"
-                  name="descricao"
-                  value={NotasData.descricao}
+                  id=" nome_disciplina"
+                  name=" nome_disciplina"
+                  value={NotasData.nome_disciplina}
                 />
                  &nbsp; &nbsp;
                 <i class="bi bi-search my-custom-icon"></i>
@@ -201,16 +218,16 @@ async function getByNome(nomee) {
           </div>
           <div className="row">
             <div className="col-3">
-              <span>Notas&nbsp;<b>*</b></span>
+              <span>TURMA&nbsp;<b>*</b></span>
               <div class="input-group flex-nowrap">
                 <input
                   type="text"
                   class="form-control"
                   placeholder=""
                   onChange={handleInputChange}
-                  id="descricao"
-                  name="descricao"
-                  value={NotasData.descricao}
+                  id="descricao_turma"
+                  name="descricao_turma"
+                  value={NotasData.descricao_turma}
                 />
                  &nbsp; &nbsp;
                 <i class="bi bi-search my-custom-icon"></i>
@@ -224,9 +241,9 @@ async function getByNome(nomee) {
                   type="text"
                   class="form-control"
                   placeholder="0 A 10"
-                  id="qtde"
-                  name="qtde"
-                  value={NotasData.qtde}
+                  id="valor_nota"
+                  name="valor_nota"
+                  value={NotasData.valor_nota}
                   onChange={handleInputChange}
                 />
               </div>
@@ -243,9 +260,9 @@ async function getByNome(nomee) {
                   class="form-control"
                   placeholder=""
                   onChange={handleInputChange}
-                  id="descricao"
-                  name="descricao"
-                  value={NotasData.descricao}
+                  id="data_avaliacao"
+                  name="data_avaliacao"
+                  value={NotasData.data_avaliacao}
                 />
               </div>
             </div>
@@ -256,9 +273,9 @@ async function getByNome(nomee) {
                 type="radio"
                 class="form-check-input"
                 onChange={handleInputChange}
-                id="checkboxId" 
-                name="checkboxName" 
-                value={NotasData.descricao}
+                id="tipo_avaliacao" 
+                name="tipo_avaliacao" 
+                value={NotasData.tipo_avaliacao}
                />
               </div>
             </div>
@@ -269,9 +286,9 @@ async function getByNome(nomee) {
                 type="radio"
                 class="form-check-input"
                 onChange={handleInputChange}
-                id="checkboxId" 
-                name="checkboxName" 
-                value={NotasData.descricao}
+                id="tipo_avaliacao" 
+                name="tipo_avaliacao" 
+                value={NotasData.tipo_avaliacao}
                />
               </div>
             </div>
@@ -282,9 +299,9 @@ async function getByNome(nomee) {
                   type="text"
                   class="form-control"
                   placeholder="0 A 10"
-                  id="qtde"
-                  name="qtde"
-                  value={NotasData.qtde}
+                  id="peso_avaliacao"
+                  name="peso_avaliacao"
+                  value={NotasData.peso_avaliacao}
                   onChange={handleInputChange}
                 />
               </div>
@@ -344,52 +361,52 @@ async function getByNome(nomee) {
 
         </div>
           <div class="row">
-            <div class="col-3">
+            <div class="col-4">
                   <div class="input-group flex-nowrap">
                     <input
                       name="nomePesquisa"
                       id="nomePesquisa"
                       type="text"
                       class="form-control"
-                      placeholder="Pesquisar por aluno"
+                      placeholder="Pesquisar por nome aluno"
                       value={Notass.nome}
                       onChange={handleInputChange}
-                      onBlur={(e) => setNotasNome(e.target.value)}
+                      onBlur={(e) => setAlunoNome(e.target.value)}
                     />
                       &nbsp; &nbsp;
-                    <i class="bi bi-search my-custom-icon"  onClick={()=>getByNome(NotasNome)} ></i> &nbsp;&nbsp;&nbsp;
+                    <i class="bi bi-search my-custom-icon"  onClick={()=>getByNome(alunoNome,"aluno")} ></i> &nbsp;&nbsp;&nbsp;
                 </div>
               </div>
-              <div class="col-3">
+              <div class="col-4">
                   <div class="input-group flex-nowrap">
                     <input
                       name="nomePesquisa"
                       id="nomePesquisa"
                       type="text"
                       class="form-control"
-                      placeholder="Pesquisar por disciplina"
+                      placeholder="Pesquisar por nome disciplina"
                       value={Notass.nome}
                       onChange={handleInputChange}
-                      onBlur={(e) => setNotasNome(e.target.value)}
+                      onBlur={(e) => setDisciplinaNome(e.target.value)}
                     />
                       &nbsp; &nbsp;
-                    <i class="bi bi-search my-custom-icon"  onClick={()=>getByNome(NotasNome)} ></i> &nbsp;&nbsp;&nbsp;
+                    <i class="bi bi-search my-custom-icon"  onClick={()=>getByNome(disciplinaNome,"disciplina")} ></i> &nbsp;&nbsp;&nbsp;
                 </div>
               </div>
-              <div class="col-3">
+              <div class="col-4">
                   <div class="input-group flex-nowrap">
                     <input
                       name="nomePesquisa"
                       id="nomePesquisa"
                       type="text"
                       class="form-control"
-                      placeholder="Pesquisar por Notass"
+                      placeholder="Pesquisar por nome turma"
                       value={Notass.nome}
                       onChange={handleInputChange}
-                      onBlur={(e) => setNotasNome(e.target.value)}
+                      onBlur={(e) => setTurmaNome(e.target.value)}
                     />
                       &nbsp; &nbsp;
-                    <i class="bi bi-search my-custom-icon"  onClick={()=>getByNome(NotasNome)} ></i>
+                    <i class="bi bi-search my-custom-icon"  onClick={()=>getByNome(turmaNome,"turma")} ></i>
                 </div>
               </div>
             </div>
@@ -404,7 +421,7 @@ async function getByNome(nomee) {
                           <th>TURMA</th>
                           <th>DISCIPLINA</th>
                           <th>NOTA</th>
-                          <th>DATA</th>
+                          <th>PESO</th>
                           <th>TIPO AVALIAÇÃO</th>
                           <th>DATA AVALIAÇÃO</th>
                           <th>OBSERVAÇÃO</th>
@@ -413,14 +430,14 @@ async function getByNome(nomee) {
         <tbody>
         {
             Notas.map((Notas)=>(
-                <tr key={Notas.codigo}>
+                <tr key={Notas.id}>
                     <td>{Notas.nome_aluno} </td>
                     <td>{Notas.descricao_turma} </td>
                     <td>{Notas.nome_disciplina} </td>
                     <td>{Notas.valor_nota} </td>
-                    <td>{Notas.data_avaliacao} </td>
-                    <td>{Notas.tipo_avaliacao} </td>
                     <td>{Notas.peso_avaliacao} </td>
+                    <td>{Notas.tipo_avaliacao} </td>
+                    <td>{Notas.data_avaliacao} </td>
                     <td>{Notas.observacao} </td>
                     <td><i class="bi bi-trash" style={{ color: 'red' }} onClick={()=>handleDelete(Notas.codigo)}></i></td>
                     <td><i class="bi bi-pen" style={{ color: 'blue' }} onClick={()=>handleEdit(Notas)}></i></td>
