@@ -75,7 +75,7 @@ class NotaService{
  
     async filtrar(filtroData){
         try {
-            const response = await fetch(`${API_BASE_URL}/nota/filtrar`,{
+            const response = await fetch(`${API_BASE_URL}/notas/filtrar`,{
                 method:"POST",
                 headers:{
                     'Content-Type':'application/json'

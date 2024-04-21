@@ -7,7 +7,7 @@ const notasController = new notasContoller
 router.get('/',notasController.getAll)
 router.get('/:codigo',notasController.getByCodigo)
 router.post('/',notasController.create)
-router.post('/:filtrar',notasController.getByName)
+router.post('/:filtrar',notasController.getByNotas)
 router.put('/',notasController.update)
 router.delete('/:codigo',notasController.delete)
 
