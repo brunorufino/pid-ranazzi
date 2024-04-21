@@ -266,7 +266,7 @@ async function getByNome(nomee, chave) {
                 />
               </div>
             </div>
-            <div className="col-1">
+            <div className="col-2">
               <span>PROVA</span>
               <div class="input-group flex-nowrap">
               <input
@@ -276,10 +276,11 @@ async function getByNome(nomee, chave) {
                 id="tipo_avaliacao" 
                 name="tipo_avaliacao" 
                 value={NotasData.tipo_avaliacao}
+                checked
                />
               </div>
             </div>
-            <div className="col-1">
+            <div className="col-2">
               <span>TRABALHO</span>
               <div class="input-group flex-nowrap">
               <input
@@ -292,7 +293,12 @@ async function getByNome(nomee, chave) {
                />
               </div>
             </div>
-            <div className="col-1">
+         
+          </div>
+
+
+          <div className="row"> 
+          <div className="col-1">
               <span>PESO&nbsp;<b>*</b></span>
               <div class="input-group flex-nowrap">
                 <input
@@ -306,6 +312,8 @@ async function getByNome(nomee, chave) {
                 />
               </div>
             </div>
+
+
           </div>
           <div className="row">
               
