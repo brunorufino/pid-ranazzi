@@ -42,6 +42,7 @@ const [tipoAvaliacao, setTipoAvaliacao] = useState("Prova");
         await NotaService.createNota(requestBody)
         alert('Notas cadastrado com sucesso!')
         await carregaNotass();  
+        window.location.reload();
     } catch (error) {
       alert('Erro ao cadastrar nota do aluno!')
     }
