@@ -1,0 +1,25 @@
+
+.alinhamento{
+    padding-left: 300px;
+}
+
+span{
+    font-weight: 600;
+    display: inline-block;
+}
+
+.b{
+  display: inline-block;
+}
+.my-custom-icon {
+    font-size: 30px;
+  }
+
+  .aling-itens-botoes{
+  
+    padding-left: 300px;
+  }
+
+  p{
+    font-weight: 600;
+  }

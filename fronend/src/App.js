@@ -8,6 +8,7 @@ import CadastroDisciplina from "./pages/CadastroDisciplina/CadastroDisciplina.js
 import CadastroAluno from "./pages/CadastroAluno/CadastrarAluno.jsx";
 import Cronograma from "./pages/Cronograma/Cronograma.jsx";
 import Notas from "./pages/Notas/Notas.jsx";
+import Matricula from "./pages/Matricula/Matricula.jsx"
 
 import "./App.css";
 
@@ -26,6 +27,7 @@ function App() {
         <Route path="/disciplina" element={<CadastroDisciplina />} />
         <Route path="/cronograma" element={<Cronograma />} />
         <Route path="/notas" element={<Notas />} />
+        <Route path="/matricula" element={<Matricula />} />
       </Routes>
       <Sidebar />
     </Router>

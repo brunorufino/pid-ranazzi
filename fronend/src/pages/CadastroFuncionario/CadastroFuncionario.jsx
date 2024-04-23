@@ -537,6 +537,9 @@ const [funcionario, setFuncionario] = useState([])
             </div>
           </div>
           <div className="row">&nbsp;</div>
+
+
+          
           <div className="card">
             <h5 class="card-header">DEPARTAMENTO</h5>
             <div className="card-body">
