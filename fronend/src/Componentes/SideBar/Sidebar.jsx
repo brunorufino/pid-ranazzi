@@ -55,6 +55,12 @@ function Sidebar() {
               <i class="bi bi-file-earmark-richtext"></i> NOTAS
             </a>
           </li>
+          <li>
+            <a href="/matricula" class="nav-link text-white">
+              {" "}
+              <i class="bi bi-file-earmark-richtext"></i> MATRICULA
+            </a>
+          </li>
         </ul>
         <hr></hr>
       </div>
