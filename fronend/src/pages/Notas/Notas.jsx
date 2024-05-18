@@ -188,9 +188,9 @@ async function getByNome(nomee, chave) {
                   class="form-control"
                   placeholder=""
                   onChange={handleInputChange}
-                  id="nome_aluno"
-                  name="nome_aluno"
-                  value={NotasData.nome_aluno}
+                  id="cpf_aluno"
+                  name="cpf_aluno"
+                  value={NotasData.cpf_aluno}
                   
                 />
                 &nbsp; &nbsp;
@@ -205,9 +205,9 @@ async function getByNome(nomee, chave) {
                   class="form-control"
                   placeholder=""
                   onChange={handleInputChange}
-                  id=" nome_disciplina"
-                  name=" nome_disciplina"
-                  value={NotasData.nome_disciplina}
+                  id="codigo_disciplina"
+                  name="codigo_disciplina"
+                  value={NotasData.codigo_disciplina}
                 />
                  &nbsp; &nbsp;
                 <i class="bi bi-search my-custom-icon"></i>
@@ -225,9 +225,9 @@ async function getByNome(nomee, chave) {
                   class="form-control"
                   placeholder=""
                   onChange={handleInputChange}
-                  id="descricao_turma"
-                  name="descricao_turma"
-                  value={NotasData.descricao_turma}
+                  id="codigo_turma"
+                  name="codigo_turma"
+                  value={NotasData.codigo_turma}
                 />
                  &nbsp; &nbsp;
                 <i class="bi bi-search my-custom-icon"></i>
@@ -275,7 +275,7 @@ async function getByNome(nomee, chave) {
                 onChange={handleInputChange}
                 id="tipo_avaliacao" 
                 name="tipo_avaliacao" 
-                value={NotasData.tipo_avaliacao}
+                value="PROVA"
                />
               </div>
             </div>
@@ -288,7 +288,7 @@ async function getByNome(nomee, chave) {
                 onChange={handleInputChange}
                 id="tipo_avaliacao" 
                 name="tipo_avaliacao" 
-                value={NotasData.tipo_avaliacao}
+                value="TRABALHO"
                />
               </div>
             </div>
@@ -315,7 +315,7 @@ async function getByNome(nomee, chave) {
                 OBSERVAÇÕES <span className="span">*</span>
               </label>
               <div className="input-group flex-nowrap">
-                <textarea name="observacao" id="obs" cols="70" rows="4">
+                <textarea name="observacao" id="obs" cols="70" rows="4"   value={NotasData.observacao}  onChange={handleInputChange}>
 
                 </textarea>
               </div>
