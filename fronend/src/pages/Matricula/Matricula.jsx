@@ -157,7 +157,7 @@ function Matricula() {
                 <input
                   type="text"
                   class="form-control"
-                  placeholder=""
+                  placeholder="CPF DO ALUNO"
                   onChange={handleInputChange}
                   id="nome_aluno"
                   name="nome_aluno"
@@ -175,7 +175,7 @@ function Matricula() {
                 <input
                   type="text"
                   class="form-control"
-                  placeholder=""
+                  placeholder="CÓDIGO TURMA"
                   onChange={handleInputChange}
                   id="descricao_turma"
                   name="descricao_turma"
