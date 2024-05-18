@@ -1,4 +1,4 @@
-import img from './img/download-removebg-preview.png';
+import img from './img/cover-procuradoria-removebg-preview.png';
 import './Brasao.css';
 
 function Brasao() {

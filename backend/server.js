@@ -28,6 +28,8 @@ app.use('/cronograma',cronogramaRoutes)
 const notasController = require('./routes/notaRoutes')
 app.use('/notas',notasController)
 
+const matriculaController = require('./routes/matriculaRoutes')
+app.use('/matricula',matriculaController)
 
 app.listen(port, ()=> {
     console.log('Rodando na porta: '+ port);
